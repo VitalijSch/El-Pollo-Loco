@@ -1,4 +1,4 @@
-class EndBoss extends MovableObject {
+class EndBoss extends Movable {
     endBossWalk = [
         '../assets/images/4_enemie_boss_chicken/2_alert/G5.png',
         '../assets/images/4_enemie_boss_chicken/2_alert/G6.png',

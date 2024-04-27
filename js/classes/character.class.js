@@ -1,6 +1,6 @@
 class Character extends MovableObject {
     x = 80;
-    y = 90;
+    y = 80;
     width = 150;
     height = 350;
     characterWalkCache = [
@@ -13,6 +13,7 @@ class Character extends MovableObject {
     ];
     world;
     speed = 2;
+    walkSound = new Audio('../assets/audio/character_walk.mp3');
 
 
     constructor() {
@@ -24,25 +25,25 @@ class Character extends MovableObject {
 
     animateCharacterWalk() {
         setInterval(() => {
-            if (this.world.keyboard.right) {
+            this.walkSound.pause();
+            if (this.world.keyboard.right && this.x < this.world.level.levelEndX) {
                 this.x += this.speed;
                 this.otherDirection = false;
+                this.walkSound.play();
             }
-            if (this.world.keyboard.left) {
+            if (this.world.keyboard.left && this.x > 0) {
                 this.x -= this.speed;
                 this.otherDirection = true;
+                this.walkSound.play();
             }
-            this.world.cameraX = -this.x;
+            this.world.cameraX = -this.x + 100;
         }, 1000 / 60);
         setInterval(() => {
             if (this.world.keyboard.right || this.world.keyboard.left) {
                 this.x += this.speed;
-                let i = this.currentImage % this.characterWalkCache.length;
-                this.path = this.characterWalkCache[i];
-                this.img = this.imageCache[this.path];
-                this.currentImage++;
+                this.playAnimation(this.characterWalkCache);
             }
-        }, 100);
+        }, 50);
     }
 
 

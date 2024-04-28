@@ -42,7 +42,8 @@ class Character extends Movable {
 
 
     constructor() {
-        super().loadImage('../assets/images/2_character_pepe/2_walk/W-21.png');
+        super();
+        this.loadImage('../assets/images/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.characterWalkCache);
         this.loadImages(this.characterJumpCache);
         this.loadImages(this.characterHurtCache);
@@ -65,7 +66,7 @@ class Character extends Movable {
                 this.otherDirection = true;
                 this.moveSound.play();
             }
-            if (this.world.keyboard.up && !this.isAboveGround()) {
+            if (this.world.keyboard.space && !this.isAboveGround()) {
                 this.jump();
             }
             this.world.cameraX = -this.x + 100;

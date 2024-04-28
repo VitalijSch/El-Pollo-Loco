@@ -41,7 +41,11 @@ class Movable extends Drawable {
 
 
     isAboveGround() {
-        return this.y < 80;
+        if (this instanceof Throwable) {
+            return true;
+        } else {
+            return this.y < 80;
+        }
     }
 
 
@@ -55,7 +59,7 @@ class Movable extends Drawable {
 
     hit() {
         this.energy -= 20;
-        if(this.energy < 0) {
+        if (this.energy < 0) {
             this.energy = 0;
             this.characterDead();
         } else {
@@ -73,16 +77,5 @@ class Movable extends Drawable {
 
     isDead() {
         return this.energy === 0;
-    }
-
-
-    drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken) {
-            ctx.beginPath();
-            ctx.lineWidth = 5;
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
-            ctx.stroke();
-        }
     }
 }

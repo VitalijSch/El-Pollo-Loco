@@ -15,7 +15,8 @@ class EndBoss extends Movable {
 
 
     constructor() {
-        super().loadImage(this.endBossWalk[0]);
+        super();
+        this.loadImage(this.endBossWalk[0]);
         this.loadImages(this.endBossWalk);
         this.x = 2500;
         this.animateEndBossWalk();

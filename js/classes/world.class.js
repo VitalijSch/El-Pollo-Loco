@@ -1,12 +1,14 @@
 class World {
+    throwable = [];
     character = new Character();
     statusBar = new StatusBar();
-    throwable = [];
+    backgroundSound = new Audio('../assets/audio/background.mp3');
     level = level1;
+    cameraX = -100;
     ctx;
     canvas;
     keyboard;
-    cameraX = -100;
+
 
 
     constructor(canvas, keyboard) {
@@ -16,6 +18,9 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
+        setInterval(() => {
+            this.backgroundSound.play();
+        }, 500)
     }
 
 
@@ -76,7 +81,6 @@ class World {
     run() {
         setInterval(() => {
             this.checkCollisions();
-            this.checkThrowCollisions();
         }, 1000)
     }
 
@@ -85,7 +89,7 @@ class World {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
+                this.statusBar.setHealth(this.character.energy);
             }
         })
     }

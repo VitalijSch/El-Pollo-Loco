@@ -22,7 +22,7 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/4_hurt/H-41.png',
         '../assets/images/2_character_pepe/4_hurt/H-42.png',
         '../assets/images/2_character_pepe/4_hurt/H-43.png',
-    ]
+    ];
     characterDeadCache = [
         '../assets/images/2_character_pepe/5_dead/D-51.png',
         '../assets/images/2_character_pepe/5_dead/D-52.png',
@@ -43,7 +43,7 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/1_idle/idle/I-8.png',
         '../assets/images/2_character_pepe/1_idle/idle/I-9.png',
         '../assets/images/2_character_pepe/1_idle/idle/I-10.png',
-    ]
+    ];
     charactertoStandOverTenSecondsCache = [
         '../assets/images/2_character_pepe/1_idle/long_idle/I-11.png',
         '../assets/images/2_character_pepe/1_idle/long_idle/I-12.png',
@@ -55,7 +55,7 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/1_idle/long_idle/I-18.png',
         '../assets/images/2_character_pepe/1_idle/long_idle/I-19.png',
         '../assets/images/2_character_pepe/1_idle/long_idle/I-20.png',
-    ]
+    ];
     moveSound = new Audio('../assets/audio/move.mp3');
     jumpSound = new Audio('../assets/audio/jump.mp3');
     hurtSound = new Audio('../assets/audio/hurt.mp3');
@@ -142,11 +142,11 @@ class Character extends Movable {
     toStandAnimation() {
         let currentTime = new Date().getTime();
         let timepassed = currentTime - this.toStandTime;
-        if (timepassed >= 10000) {
+        if (timepassed >= 15000) {
             this.playAnimation(this.charactertoStandOverTenSecondsCache);
-            this.snoringSound.play();
+            // this.snoringSound.play();
         }
-        if (timepassed < 10000 && timepassed > 4999) {
+        if (timepassed < 15000 && timepassed > 9999) {
             this.playAnimation(this.charactertoStandUnderTenSecondsCache);
         }
     }

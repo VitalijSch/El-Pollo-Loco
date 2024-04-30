@@ -19,7 +19,7 @@ class World {
         this.setWorld();
         this.run();
         setInterval(() => {
-            this.backgroundSound.play();
+            // this.backgroundSound.play();
         }, 500)
     }
 
@@ -34,6 +34,7 @@ class World {
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.collectItems);
         this.ctx.translate(-this.cameraX, 0);
         this.addToMap(this.statusBar);
         this.ctx.translate(this.cameraX, 0);

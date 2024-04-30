@@ -14,25 +14,38 @@ class StatusBar extends Drawable {
         '../assets/images/7_statusbars/1_statusbar/1_statusbar_coin/green/60.png',
         '../assets/images/7_statusbars/1_statusbar/1_statusbar_coin/green/80.png',
         '../assets/images/7_statusbars/1_statusbar/1_statusbar_coin/green/100.png',
-    ]
+    ];
+    statusBottlesCache = [
+        '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/0.png',
+        '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/20.png',
+        '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/40.png',
+        '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/60.png',
+        '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/80.png',
+        '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/100.png',
+    ];
     health = 100;
     healthImg;
     healthY = 0;
     coins = 0;
     coinsImg;
     coinsY = 50;
+    bottles = 0;
+    bottlesImg;
+    bottlesY = 100;
 
 
     constructor() {
         super();
         this.loadImages(this.statusHealthCache);
         this.loadImages(this.statusCoinsCache);
+        this.loadImages(this.statusBottlesCache);
         this.x = 0;
         this.y = 0;
         this.width = 200;
         this.height = 50;
         this.setHealth(this.health);
         this.setCoins(this.coins);
+        this.setBottles(this.bottles);
     }
 
 
@@ -47,6 +60,13 @@ class StatusBar extends Drawable {
         this.coin = coin;
         this.path = this.statusCoinsCache[this.resolvePercentage(coin)];
         this.coinsImg = this.imageCache[this.path];
+    }
+
+
+    setBottles(bottle) {
+        this.bottle = bottle;
+        this.path = this.statusBottlesCache[this.resolvePercentage(bottle)];
+        this.bottlesImg = this.imageCache[this.path];
     }
 
 
@@ -75,5 +95,6 @@ class StatusBar extends Drawable {
     draw(ctx) {
         ctx.drawImage(this.healthImg, this.x, this.y + this.healthY, this.width, this.height);
         ctx.drawImage(this.coinsImg, this.x, this.y + this.coinsY, this.width, this.height);
+        ctx.drawImage(this.bottlesImg, this.x, this.y + this.bottlesY, this.width, this.height);
     }
 }

@@ -29,7 +29,7 @@ class Drawable {
 
 
     drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken) {
+        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken) {
             ctx.beginPath();
             ctx.lineWidth = 5;
             ctx.strokeStyle = 'blue';

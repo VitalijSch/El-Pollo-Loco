@@ -35,10 +35,15 @@ const level1 = new Level(
         new Background('../assets/images/5_background/layers/1_first_layer/2.png', 719 * 3),
     ],
     [
-        new Collector(200, 50),
-        new Collector(600, 100),
-        new Collector(1100, 150),
-        new Collector(1500, 200),
-        new Collector(1700, 150),
+        new Bottle(200),
+        new Coin(350, 200),
+        new Bottle(600),
+        new Coin(800, 250),
+        new Bottle(1100),
+        new Coin(1450, 300),
+        new Bottle(1500),
+        new Coin(1700, 250),
+        new Bottle(1700),
+        new Coin(2000, 200),
     ]
 );

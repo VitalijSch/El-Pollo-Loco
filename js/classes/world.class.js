@@ -15,12 +15,10 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.draw();
         this.setWorld();
+        this.draw();
         this.run();
-        setInterval(() => {
-            // this.backgroundSound.play();
-        }, 500)
+        this.backgroundMusic();
     }
 
 
@@ -43,6 +41,80 @@ class World {
         this.addObjectsToMap(this.throwable);
         this.ctx.translate(-this.cameraX, 0);
         requestAnimationFrame(() => this.draw());
+    }
+
+
+    run() {
+        setInterval(() => {
+            this.checkCollisions();
+            this.checkCollections();
+        }, 1000)
+    }
+
+
+    checkCollisions() {
+        this.level.enemies.forEach(enemy => {
+            if (this.character.isColliding(enemy)) {
+                this.character.hit();
+                this.statusBar.setHealth(this.character.energy);
+            }
+        })
+    }
+
+
+    checkCollections() {
+        this.level.collectItems.forEach(item => {
+            if (this.character.isColliding(item)) {
+                if (item.path === '../assets/images/8_coin/coin_1.png') {
+                    this.collectionCoin(item);
+                } else {
+                    this.collectionBottle(item);
+                }
+            }
+        })
+    }
+
+
+    collectionCoin(item) {
+        this.statusBar.coins += 20;
+        this.statusBar.setCoins(this.statusBar.coins);
+        item.deleteCoin();
+        this.ctx.clearRect(item.x, item.y, item.width, item.height);
+        this.statusBar.draw(this.ctx);
+    }
+
+
+    collectionBottle(item) {
+        this.statusBar.bottle += 20;
+        this.statusBar.setBottles(this.statusBar.bottle);
+        item.deleteBottle();
+        this.ctx.clearRect(item.x, item.y, item.width, item.height);
+        this.statusBar.draw(this.ctx);
+    }
+
+
+    checkCollisionsJump() {
+        this.level.enemies.forEach(enemy => {
+            if (this.character.isCollidingAbove(enemy)) {
+                console.log('erwischt')
+                enemy.path = '../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png';
+            }
+        })
+    }
+
+
+    checkThrowCollisions() {
+        if (this.keyboard.d) {
+            let bottle = new Throwable(this.character.x + 100, this.character.y + 100);
+            this.throwable.push(bottle);
+        }
+    }
+
+
+    backgroundMusic() {
+        setInterval(() => {
+            this.backgroundSound.play();
+        }, 500)
     }
 
 
@@ -76,30 +148,5 @@ class World {
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
-    }
-
-
-    run() {
-        setInterval(() => {
-            this.checkCollisions();
-        }, 1000)
-    }
-
-
-    checkCollisions() {
-        this.level.enemies.forEach(enemy => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusBar.setHealth(this.character.energy);
-            }
-        })
-    }
-
-
-    checkThrowCollisions() {
-        if (this.keyboard.d) {
-            let bottle = new Throwable(this.character.x + 100, this.character.y + 100);
-            this.throwable.push(bottle);
-        }
     }
 }

@@ -11,6 +11,7 @@ class EndBoss extends Movable {
     ];
     width = 250;
     height = 400;
+    x = 0;
     y = 50;
 
 

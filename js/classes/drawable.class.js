@@ -1,10 +1,10 @@
 class Drawable {
+    imageCache = {};
+    img;
+    width = 100;
+    height = 150;
     x = 120;
     y = 300;
-    height = 150;
-    width = 100;
-    img;
-    imageCache = {};
     currentImage = 0;
 
 
@@ -29,7 +29,7 @@ class Drawable {
 
 
     drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken) {
+        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin) {
             ctx.beginPath();
             ctx.lineWidth = 5;
             ctx.strokeStyle = 'blue';

@@ -6,6 +6,7 @@ class SmallChicken extends Movable {
     ];
     width = 60;
     height = 60;
+    x = 0;
     y = 350;
 
 

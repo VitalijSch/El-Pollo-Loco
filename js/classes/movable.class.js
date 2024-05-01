@@ -44,16 +44,25 @@ class Movable extends Drawable {
         if (this instanceof Throwable) {
             return true;
         } else {
-            return this.y < 80;
+            return this.y < 170;
         }
     }
 
 
     isColliding(mo) {
-        return this.x + this.width > mo.x &&
-            this.y + this.height > mo.y &&
-            this.x < mo.x &&
-            this.y < mo.y
+        if (mo.deleted) {
+            return false;
+        }
+        return (this.x + this.width) >= mo.x &&
+            this.x <= (mo.x + mo.width) &&
+            (this.y + this.height) >= mo.y &&
+            this.y <= (mo.y + mo.height)
+    }
+
+
+    isCollidingAbove(mo) {
+        return (this.y + this.height) >= mo.y &&
+            (this.y + this.height) <= (mo.y + mo.height)
     }
 
 

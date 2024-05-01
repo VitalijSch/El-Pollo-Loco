@@ -56,19 +56,19 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/1_idle/long_idle/I-19.png',
         '../assets/images/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
+    world;
+    toStandTime;
+    width = 100;
+    height = 250;
+    x = 80;
+    y = 170;
+    speed = 2;
     moveSound = new Audio('../assets/audio/move.mp3');
     jumpSound = new Audio('../assets/audio/jump.mp3');
     hurtSound = new Audio('../assets/audio/hurt.mp3');
     deadSound = new Audio('../assets/audio/dead.mp3');
     bottleSound = new Audio('../assets/audio/bottle.mp3');
     snoringSound = new Audio('../assets/audio/snoring.mp3');
-    x = 80;
-    y = 0;
-    width = 150;
-    height = 350;
-    world;
-    speed = 2;
-    toStandTime;
 
 
     constructor() {
@@ -87,67 +87,100 @@ class Character extends Movable {
 
 
     animateCharacter() {
+        this.toStandTimeValid();
         setInterval(() => {
             this.moveSound.pause();
-            if (this.world.keyboard.right && this.x < this.world.level.levelEndX) {
-                this.moveRight();
-                this.otherDirection = false;
-                this.moveSound.play();
-                this.toStandTime = new Date().getTime();
-            }
-            if (this.world.keyboard.left && this.x > 0) {
-                this.moveLeft();
-                this.otherDirection = true;
-                this.moveSound.play();
-                this.toStandTime = new Date().getTime();
-            }
-            if (this.world.keyboard.space && !this.isAboveGround()) {
-                this.jump();
-                this.jumpSound.play();
-                this.toStandTime = new Date().getTime();
-            }
-            if (this.world.keyboard.d) {
-                this.bottleSound.play();
-                this.world.checkThrowCollisions();
-                this.toStandTime = new Date().getTime();
-            }
+            this.characterMoveRight();
+            this.characterMoveLeft();
+            this.characterJump();
+            this.characterThrow();
             this.world.cameraX = -this.x + 100;
         }, 1000 / 80);
         setInterval(() => {
-            this.loadImage('../assets/images/2_character_pepe/1_idle/idle/I-1.png');
             this.toStandAnimation();
         }, 100)
-        if (this.y === 0) {
-            this.toStandTime = new Date().getTime();
-        } else {
-            this.toStandTime = 0;
-        }
         setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.characterDeadCache);
-                this.deadSound.play();
-            } else if (this.isHurt()) {
-                this.playAnimation(this.characterHurtCache);
-                this.hurtSound.play();
-            } else if (this.isAboveGround()) {
-                this.playAnimation(this.characterJumpCache);
-            } else if (this.world.keyboard.right || this.world.keyboard.left) {
-                this.x += this.speed;
-                this.playAnimation(this.characterWalkCache);
-            }
+            this.handleCharacterAnimation();
         }, 50);
     }
 
 
+    characterMoveRight() {
+        if (this.world.keyboard.right && this.x < this.world.level.levelEndX) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.moveSound.play();
+            this.toStandTime = new Date().getTime();
+        }
+    }
+
+
+    characterMoveLeft() {
+        if (this.world.keyboard.left && this.x > 0) {
+            this.moveLeft();
+            this.otherDirection = true;
+            this.moveSound.play();
+            this.toStandTime = new Date().getTime();
+        }
+    }
+
+
+    characterJump() {
+        if (this.world.keyboard.space && !this.isAboveGround()) {
+            this.jump();
+            if (this.speedY === 30) {
+                this.world.checkCollisionsJump();
+            }
+            this.jumpSound.play();
+            this.toStandTime = new Date().getTime();
+        }
+    }
+
+
+    characterThrow() {
+        if (this.world.keyboard.d) {
+            this.bottleSound.play();
+            this.toStandTime = new Date().getTime();
+        }
+    }
+
+
+    toStandTimeValid() {
+        if (this.y === 170) {
+            this.toStandTime = new Date().getTime();
+        } else {
+            this.toStandTime = 0;
+        }
+    }
+
+
     toStandAnimation() {
+        this.loadImage('../assets/images/2_character_pepe/1_idle/idle/I-1.png');
         let currentTime = new Date().getTime();
         let timepassed = currentTime - this.toStandTime;
         if (timepassed >= 15000) {
             this.playAnimation(this.charactertoStandOverTenSecondsCache);
-            // this.snoringSound.play();
+            this.snoringSound.play();
         }
         if (timepassed < 15000 && timepassed > 9999) {
             this.playAnimation(this.charactertoStandUnderTenSecondsCache);
+        }
+    }
+
+
+    handleCharacterAnimation() {
+        if (this.isDead()) {
+            this.playAnimation(this.characterDeadCache);
+            this.deadSound.play();
+        } else if (this.isHurt()) {
+            this.playAnimation(this.characterHurtCache);
+            this.hurtSound.play();
+        } else if (this.isAboveGround()) {
+            this.playAnimation(this.characterJumpCache);
+        } else if (this.world.keyboard.right || this.world.keyboard.left) {
+            this.playAnimation(this.characterWalkCache);
+        } else if (this.world.keyboard.d) {
+
         }
     }
 }

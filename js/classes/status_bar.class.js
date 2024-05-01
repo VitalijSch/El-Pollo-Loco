@@ -23,14 +23,16 @@ class StatusBar extends Drawable {
         '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/80.png',
         '../assets/images/7_statusbars/1_statusbar/3_statusbar_bottle/green/100.png',
     ];
-    health = 100;
     healthImg;
+    coinsImg;
+    bottlesImg;
+    x = 0;
+    y = 0;
+    health = 100;
     healthY = 0;
     coins = 0;
-    coinsImg;
     coinsY = 50;
     bottles = 0;
-    bottlesImg;
     bottlesY = 100;
 
 
@@ -39,8 +41,6 @@ class StatusBar extends Drawable {
         this.loadImages(this.statusHealthCache);
         this.loadImages(this.statusCoinsCache);
         this.loadImages(this.statusBottlesCache);
-        this.x = 0;
-        this.y = 0;
         this.width = 200;
         this.height = 50;
         this.setHealth(this.health);
@@ -70,23 +70,23 @@ class StatusBar extends Drawable {
     }
 
 
-    resolvePercentage(array) {
-        if (array === 100) {
+    resolvePercentage(item) {
+        if (item === 100) {
             return 5;
         }
-        if (array === 80) {
+        if (item === 80) {
             return 4;
         }
-        if (array === 60) {
+        if (item === 60) {
             return 3;
         }
-        if (array === 40) {
+        if (item === 40) {
             return 2;
         }
-        if (array === 20) {
+        if (item === 20) {
             return 1;
         }
-        if (array === 0) {
+        if (item === 0) {
             return 0;
         }
     }

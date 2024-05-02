@@ -29,7 +29,7 @@ class Drawable {
 
 
     drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin) {
+        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Throwable || this instanceof EndBoss) {
             ctx.beginPath();
             ctx.lineWidth = 5;
             ctx.strokeStyle = 'blue';

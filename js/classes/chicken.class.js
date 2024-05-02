@@ -4,10 +4,16 @@ class Chicken extends Movable {
         '../assets/images/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
         '../assets/images/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
     ];
-    width = 60;
-    height = 60;
+    width = 55;
+    height = 55;
     x = 0;
     y = 350;
+    offset = {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    };
 
 
     constructor(x) {

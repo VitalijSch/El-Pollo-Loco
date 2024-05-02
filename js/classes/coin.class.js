@@ -10,6 +10,12 @@ class Coin extends Drawable {
     y = 0;
     coin = 0;
     deleted = false;
+    offset = {
+        top: 25,
+        left: 25,
+        right: 25,
+        bottom: 25
+    }
 
 
     constructor(x, y) {

@@ -10,9 +10,15 @@ class EndBoss extends Movable {
         '../assets/images/4_enemie_boss_chicken/2_alert/G12.png',
     ];
     width = 250;
-    height = 400;
+    height = 350;
     x = 0;
-    y = 50;
+    y = 90;
+    offset = {
+        top: 50,
+        left: 50,
+        right: 50,
+        bottom: 50
+    };
 
 
     constructor() {

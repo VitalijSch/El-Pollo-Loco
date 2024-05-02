@@ -8,15 +8,12 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/2_walk/W-26.png',
     ];
     characterJumpCache = [
-        '../assets/images/2_character_pepe/3_jump/J-31.png',
-        '../assets/images/2_character_pepe/3_jump/J-32.png',
         '../assets/images/2_character_pepe/3_jump/J-33.png',
         '../assets/images/2_character_pepe/3_jump/J-34.png',
         '../assets/images/2_character_pepe/3_jump/J-35.png',
         '../assets/images/2_character_pepe/3_jump/J-36.png',
         '../assets/images/2_character_pepe/3_jump/J-37.png',
         '../assets/images/2_character_pepe/3_jump/J-38.png',
-        '../assets/images/2_character_pepe/3_jump/J-39.png',
     ];
     characterHurtCache = [
         '../assets/images/2_character_pepe/4_hurt/H-41.png',
@@ -67,8 +64,13 @@ class Character extends Movable {
     jumpSound = new Audio('../assets/audio/jump.mp3');
     hurtSound = new Audio('../assets/audio/hurt.mp3');
     deadSound = new Audio('../assets/audio/dead.mp3');
-    bottleSound = new Audio('../assets/audio/bottle.mp3');
     snoringSound = new Audio('../assets/audio/snoring.mp3');
+    offset = {
+        top: 120,
+        left: 0,
+        right: 0,
+        bottom: 0
+    }
 
 
     constructor() {
@@ -94,14 +96,14 @@ class Character extends Movable {
             this.characterMoveLeft();
             this.characterJump();
             this.characterThrow();
-            this.world.cameraX = -this.x + 100;
+            this.handleCamera();
         }, 1000 / 80);
         setInterval(() => {
             this.toStandAnimation();
         }, 100)
         setInterval(() => {
             this.handleCharacterAnimation();
-        }, 50);
+        }, 100);
     }
 
 
@@ -131,7 +133,6 @@ class Character extends Movable {
             if (this.speedY === 30) {
                 this.world.checkCollisionsJump();
             }
-            this.jumpSound.play();
             this.toStandTime = new Date().getTime();
         }
     }
@@ -139,8 +140,15 @@ class Character extends Movable {
 
     characterThrow() {
         if (this.world.keyboard.d) {
-            this.bottleSound.play();
             this.toStandTime = new Date().getTime();
+        }
+    }
+
+    handleCamera() {
+        if (this.x < 2200) {
+            this.world.cameraX = -this.x + 100;
+        } else {
+            this.world.cameraX = -2200 + 100;
         }
     }
 
@@ -176,11 +184,10 @@ class Character extends Movable {
             this.playAnimation(this.characterHurtCache);
             this.hurtSound.play();
         } else if (this.isAboveGround()) {
+            this.jumpSound.play();
             this.playAnimation(this.characterJumpCache);
         } else if (this.world.keyboard.right || this.world.keyboard.left) {
             this.playAnimation(this.characterWalkCache);
-        } else if (this.world.keyboard.d) {
-
         }
     }
 }

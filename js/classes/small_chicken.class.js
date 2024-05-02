@@ -4,10 +4,16 @@ class SmallChicken extends Movable {
         '../assets/images/3_enemies_chicken/chicken_small/1_walk/2_w.png',
         '../assets/images/3_enemies_chicken/chicken_small/1_walk/3_w.png',
     ];
-    width = 60;
-    height = 60;
+    width = 45;
+    height = 45;
     x = 0;
-    y = 350;
+    y = 365;
+    offset = {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    };
 
 
     constructor(x) {

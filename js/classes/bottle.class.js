@@ -10,6 +10,12 @@ class Bottle extends Drawable {
     y = 370;
     bottle = 0;
     deleted = false;
+    offset = {
+        top: 10,
+        left: 10,
+        right: 10,
+        bottom: 10
+    };
 
 
     constructor(x) {

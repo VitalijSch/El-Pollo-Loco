@@ -11,8 +11,15 @@ body {
     justify-content: center;
     align-items: center;
     gap: 50px;
+    background-image: url('../assets/images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: 'Press Start 2P', cursive;
+    font-weight: 700;
 }
 
 canvas {
     background-color: black;
+    border-radius: 10px;
 }

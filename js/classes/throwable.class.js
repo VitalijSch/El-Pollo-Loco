@@ -9,12 +9,14 @@ class Throwable extends Movable {
 
     constructor(x, y) {
         super();
+        this.loadImage('../assets/images/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png');
         this.loadImages(this.throwableCache);
         this.x = x;
         this.y = y;
         this.width = 50;
         this.height = 60;
         this.throw();
+        this.throwAnimation();
     }
 
 
@@ -24,5 +26,12 @@ class Throwable extends Movable {
         setInterval(() => {
             this.x += 10;
         }, 25);
+    }
+
+
+    throwAnimation() {
+        setInterval(() => {
+            this.playAnimation(this.throwableCache);
+        }, 1000 / 60);
     }
 }

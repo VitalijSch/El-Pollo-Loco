@@ -1,4 +1,4 @@
-class Coin extends Drawable {
+class Coin extends Movable {
     coinsCache = [
         '../assets/images/8_coin/coin_1.png',
         '../assets/images/8_coin/coin_2.png',
@@ -10,17 +10,15 @@ class Coin extends Drawable {
     y = 0;
     coin = 0;
     deleted = false;
-    offset = {
-        top: 25,
-        left: 25,
-        right: 25,
-        bottom: 25
-    }
 
 
     constructor(x, y) {
         super();
         this.loadImages(this.coinsCache);
+        this.offset.top = 25;
+        this.offset.left = 25;
+        this.offset.right = 25;
+        this.offset.bottom = 25;
         this.y = y;
         this.x = x + Math.random() * 500;
         this.setCoins(this.coin);

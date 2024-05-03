@@ -1,14 +1,11 @@
 class Cloud extends Movable {
-    width = 400;
-    height = 400;
-    x = 0;
-    y = 0;
-
-
     constructor(imagePath) {
         super();
         this.loadImage(imagePath);
+        this.width = 400;
+        this.height = 400;
         this.x = Math.random() * 500;
+        this.y = 0;
         this.moveLeft();
     }
 }

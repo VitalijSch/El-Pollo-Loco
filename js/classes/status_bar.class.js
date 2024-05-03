@@ -1,4 +1,4 @@
-class StatusBar extends Drawable {
+class StatusBar extends Movable {
     statusHealthCache = [
         '../assets/images/7_statusbars/1_statusbar/2_statusbar_health/green/0.png',
         '../assets/images/7_statusbars/1_statusbar/2_statusbar_health/green/20.png',

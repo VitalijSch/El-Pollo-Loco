@@ -32,6 +32,6 @@ class Throwable extends Movable {
     throwAnimation() {
         setInterval(() => {
             this.playAnimation(this.throwableCache);
-        }, 1000 / 60);
+        }, 1000 / 30);
     }
 }

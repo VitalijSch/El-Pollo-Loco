@@ -1,4 +1,4 @@
-class Bottle extends Drawable {
+class Bottle extends Movable {
     bottlesCache = [
         '../assets/images/6_salsa_bottle/1_salsa_bottle_on_ground.png',
         '../assets/images/6_salsa_bottle/2_salsa_bottle_on_ground.png',
@@ -10,17 +10,15 @@ class Bottle extends Drawable {
     y = 370;
     bottle = 0;
     deleted = false;
-    offset = {
-        top: 10,
-        left: 10,
-        right: 10,
-        bottom: 10
-    };
 
 
     constructor(x) {
         super();
         this.loadImages(this.bottlesCache);
+        this.offset.top = 10;
+        this.offset.left = 10;
+        this.offset.right = 10;
+        this.offset.bottom = 10;
         this.x = x + Math.random() * 500;
         this.setBottles(this.bottle);
     }

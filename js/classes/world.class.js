@@ -1,10 +1,6 @@
 class World {
     character = new Character();
     statusBar = new StatusBar();
-    backgroundSound = new Audio('../assets/audio/background.mp3');
-    bottleThrowSound = new Audio('../assets/audio/bottle.mp3');
-    coinSound = new Audio('../assets/audio/coin.mp3');
-    bottleSound = new Audio('../assets/audio/collect_bottle.mp3');
     level = level1;
     cameraX = -100;
     ctx;
@@ -22,7 +18,6 @@ class World {
         this.setWorld();
         this.draw();
         this.run();
-        this.backgroundMusic();
     }
 
 
@@ -69,6 +64,18 @@ class World {
     }
 
 
+    // checkCollisionsJump() {
+    //     this.level.enemies.forEach(enemy => {
+    //         if (this.character.isCollidingAbove(enemy)) {
+    //             console.log('Hit enemy');
+    //             enemy.path = '../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png';
+    //             enemy.img = new Image();
+    //             enemy.img.src = enemy.path;
+    //         }
+    //     })
+    // }
+
+
     checkCollections() {
         this.level.collectItems.forEach(item => {
             if (this.character.isColliding(item)) {
@@ -83,7 +90,6 @@ class World {
 
 
     collectionCoin(item) {
-        this.coinSound.play();
         this.statusBar.coins += 20;
         this.statusBar.setCoins(this.statusBar.coins);
         item.deleteCoin();
@@ -93,7 +99,6 @@ class World {
 
 
     collectionBottle(item) {
-        this.bottleSound.play();
         this.statusBar.bottle += 20;
         this.statusBar.setBottles(this.statusBar.bottle);
         item.deleteBottle();
@@ -102,32 +107,15 @@ class World {
     }
 
 
-    checkCollisionsJump() {
-        this.level.enemies.forEach(enemy => {
-            if (this.character.isCollidingAbove(enemy)) {
-                enemy.path = '../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png';
-            }
-        })
-    }
-
-
     checkThrowCollisions() {
         if (this.keyboard.d) {
             if (this.statusBar.bottle > 0) {
-                this.bottleThrowSound.play();
                 let bottle = new Throwable(this.character.x + 100, this.character.y + 100);
                 this.throwable.push(bottle);
                 this.statusBar.bottle -= 20;
                 this.statusBar.setBottles(this.statusBar.bottle);
             }
         }
-    }
-
-
-    backgroundMusic() {
-        setInterval(() => {
-            this.backgroundSound.play();
-        }, 500)
     }
 
 

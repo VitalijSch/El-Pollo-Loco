@@ -17,6 +17,7 @@ body {
     background-position: center;
     font-family: 'Press Start 2P', cursive;
     font-weight: 700;
+    font-size: 40px;
 }
 
 canvas {

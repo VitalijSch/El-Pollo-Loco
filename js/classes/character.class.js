@@ -53,28 +53,33 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/1_idle/long_idle/I-19.png',
         '../assets/images/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
-    world;
-    toStandTime;
-    width = 100;
-    height = 250;
-    x = 80;
-    y = 170;
-    speed = 2;
     moveSound = new Audio('../assets/audio/move.mp3');
     jumpSound = new Audio('../assets/audio/jump.mp3');
     hurtSound = new Audio('../assets/audio/hurt.mp3');
     deadSound = new Audio('../assets/audio/dead.mp3');
     snoringSound = new Audio('../assets/audio/snoring.mp3');
-    offset = {
-        top: 120,
-        left: 0,
-        right: 0,
-        bottom: 0
-    }
+    backgroundSound = new Audio('../assets/audio/background.mp3');
+    bottleThrowSound = new Audio('../assets/audio/bottle.mp3');
+    coinSound = new Audio('../assets/audio/coin.mp3');
+    bottleSound = new Audio('../assets/audio/collect_bottle.mp3');
+    toStandTime;
 
 
     constructor() {
         super();
+        this.loadAllImages();
+        this.width = 100;
+        this.height = 250;
+        this.x = 80;
+        this.y = 170;
+        this.speedX = 2;
+        this.offset.top = 150;
+        this.animateCharacter();
+        this.applyGravity();
+    }
+
+
+    loadAllImages() {
         this.loadImage('../assets/images/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.characterWalkCache);
         this.loadImages(this.characterJumpCache);
@@ -82,16 +87,12 @@ class Character extends Movable {
         this.loadImages(this.characterDeadCache);
         this.loadImages(this.charactertoStandUnderTenSecondsCache);
         this.loadImages(this.charactertoStandOverTenSecondsCache);
-        this.animateCharacter();
-        this.applyGravity();
     }
-
 
 
     animateCharacter() {
         this.toStandTimeValid();
         setInterval(() => {
-            this.moveSound.pause();
             this.characterMoveRight();
             this.characterMoveLeft();
             this.characterJump();
@@ -111,7 +112,6 @@ class Character extends Movable {
         if (this.world.keyboard.right && this.x < this.world.level.levelEndX) {
             this.moveRight();
             this.otherDirection = false;
-            this.moveSound.play();
             this.toStandTime = new Date().getTime();
         }
     }
@@ -121,7 +121,6 @@ class Character extends Movable {
         if (this.world.keyboard.left && this.x > 0) {
             this.moveLeft();
             this.otherDirection = true;
-            this.moveSound.play();
             this.toStandTime = new Date().getTime();
         }
     }
@@ -130,9 +129,6 @@ class Character extends Movable {
     characterJump() {
         if (this.world.keyboard.space && !this.isAboveGround()) {
             this.jump();
-            if (this.speedY === 30) {
-                this.world.checkCollisionsJump();
-            }
             this.toStandTime = new Date().getTime();
         }
     }
@@ -168,7 +164,6 @@ class Character extends Movable {
         let timepassed = currentTime - this.toStandTime;
         if (timepassed >= 15000) {
             this.playAnimation(this.charactertoStandOverTenSecondsCache);
-            this.snoringSound.play();
         }
         if (timepassed < 15000 && timepassed > 9999) {
             this.playAnimation(this.charactertoStandUnderTenSecondsCache);
@@ -179,12 +174,9 @@ class Character extends Movable {
     handleCharacterAnimation() {
         if (this.isDead()) {
             this.playAnimation(this.characterDeadCache);
-            this.deadSound.play();
         } else if (this.isHurt()) {
             this.playAnimation(this.characterHurtCache);
-            this.hurtSound.play();
         } else if (this.isAboveGround()) {
-            this.jumpSound.play();
             this.playAnimation(this.characterJumpCache);
         } else if (this.world.keyboard.right || this.world.keyboard.left) {
             this.playAnimation(this.characterWalkCache);

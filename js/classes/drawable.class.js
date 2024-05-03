@@ -1,11 +1,11 @@
 class Drawable {
     imageCache = {};
-    img;
-    width = 100;
-    height = 150;
-    x = 120;
-    y = 300;
     currentImage = 0;
+    img;
+    width;
+    height;
+    x;
+    y;
 
 
     loadImage(path) {
@@ -20,6 +20,14 @@ class Drawable {
             img.src = path;
             this.imageCache[path] = img;
         })
+    }
+
+
+    playAnimation(images) {
+        let i = this.currentImage % images.length;
+        this.path = images[i];
+        this.img = this.imageCache[this.path];
+        this.currentImage++;
     }
 
 

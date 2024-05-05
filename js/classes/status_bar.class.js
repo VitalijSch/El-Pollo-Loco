@@ -26,8 +26,6 @@ class StatusBar extends Movable {
     healthImg;
     coinsImg;
     bottlesImg;
-    x = 0;
-    y = 0;
     health = 100;
     healthY = 0;
     coins = 0;
@@ -43,6 +41,8 @@ class StatusBar extends Movable {
         this.loadImages(this.statusBottlesCache);
         this.width = 200;
         this.height = 50;
+        this.x = 0;
+        this.y = 0;
         this.setHealth(this.health);
         this.setCoins(this.coins);
         this.setBottles(this.bottles);

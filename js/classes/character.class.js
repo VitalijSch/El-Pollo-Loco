@@ -59,9 +59,6 @@ class Character extends Movable {
     deadSound = new Audio('../assets/audio/dead.mp3');
     snoringSound = new Audio('../assets/audio/snoring.mp3');
     backgroundSound = new Audio('../assets/audio/background.mp3');
-    bottleThrowSound = new Audio('../assets/audio/bottle.mp3');
-    coinSound = new Audio('../assets/audio/coin.mp3');
-    bottleSound = new Audio('../assets/audio/collect_bottle.mp3');
     toStandTime;
 
 
@@ -93,23 +90,28 @@ class Character extends Movable {
     animateCharacter() {
         this.toStandTimeValid();
         setInterval(() => {
+            this.moveSound.pause();
             this.characterMoveRight();
             this.characterMoveLeft();
             this.characterJump();
             this.characterThrow();
             this.handleCamera();
-        }, 1000 / 80);
+        }, 1000 / 60);
         setInterval(() => {
             this.toStandAnimation();
+            this.handleCharacterAnimation();
         }, 100)
         setInterval(() => {
-            this.handleCharacterAnimation();
-        }, 100);
+            if (this.isHurt()) {
+                this.hurtSound.play();
+            }
+        }, 380)
     }
 
 
     characterMoveRight() {
         if (this.world.keyboard.right && this.x < this.world.level.levelEndX) {
+            this.moveSound.play();
             this.moveRight();
             this.otherDirection = false;
             this.toStandTime = new Date().getTime();
@@ -119,6 +121,7 @@ class Character extends Movable {
 
     characterMoveLeft() {
         if (this.world.keyboard.left && this.x > 0) {
+            this.moveSound.play();
             this.moveLeft();
             this.otherDirection = true;
             this.toStandTime = new Date().getTime();
@@ -128,6 +131,7 @@ class Character extends Movable {
 
     characterJump() {
         if (this.world.keyboard.space && !this.isAboveGround()) {
+            this.jumpSound.play();
             this.jump();
             this.toStandTime = new Date().getTime();
         }
@@ -163,6 +167,7 @@ class Character extends Movable {
         let currentTime = new Date().getTime();
         let timepassed = currentTime - this.toStandTime;
         if (timepassed >= 15000) {
+            this.snoringSound.play();
             this.playAnimation(this.charactertoStandOverTenSecondsCache);
         }
         if (timepassed < 15000 && timepassed > 9999) {
@@ -173,6 +178,7 @@ class Character extends Movable {
 
     handleCharacterAnimation() {
         if (this.isDead()) {
+            this.deadSound.play();
             this.playAnimation(this.characterDeadCache);
         } else if (this.isHurt()) {
             this.playAnimation(this.characterHurtCache);

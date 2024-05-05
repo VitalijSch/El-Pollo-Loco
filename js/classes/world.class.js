@@ -1,14 +1,17 @@
 class World {
+    throwable = [];
     character = new Character();
+    movable = new Movable(this.character);
+    drawable = new Drawable();
     statusBar = new StatusBar();
     level = level1;
     cameraX = -100;
+    bottleThrowSound = new Audio('../assets/audio/bottle.mp3');
+    coinSound = new Audio('../assets/audio/coin.mp3');
+    bottleSound = new Audio('../assets/audio/collect_bottle.mp3');
     ctx;
     canvas;
     keyboard;
-    throwable = [];
-
-
 
 
     constructor(canvas, keyboard) {
@@ -36,8 +39,8 @@ class World {
         this.addToMap(this.statusBar);
         this.ctx.translate(this.cameraX, 0);
         this.addToMap(this.character);
-        this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwable);
+        this.addObjectsToMap(this.level.enemies);
         this.ctx.translate(-this.cameraX, 0);
         requestAnimationFrame(() => this.draw());
     }
@@ -51,6 +54,7 @@ class World {
             this.checkThrowCollisions();
             this.checkCollections();
         }, 100)
+        this.checkCollisionsJump();
     }
 
 
@@ -64,22 +68,33 @@ class World {
     }
 
 
-    // checkCollisionsJump() {
-    //     this.level.enemies.forEach(enemy => {
-    //         if (this.character.isCollidingAbove(enemy)) {
-    //             console.log('Hit enemy');
-    //             enemy.path = '../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png';
-    //             enemy.img = new Image();
-    //             enemy.img.src = enemy.path;
-    //         }
-    //     })
-    // }
+    checkCollisionsJump() {
+        this.level.enemies.forEach(enemy => {
+            setInterval(() => {
+                if (this.character.y < 170 || this.speedY > 0) {
+                    this.y -= this.speedY;
+                    this.speedY -= this.accelaration;
+                    if (this.character.isColliding(enemy)) {
+                        console.log(enemy)
+                        enemy.path = '../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png';
+                        enemy.img = new Image();
+                        enemy.img.src = enemy.path;
+                        if (!this.drawable.deleted) {
+                            this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+                        }
+                    }
+                }
+            }, 1000 / 30);
+        });
+    }
+
 
 
     checkCollections() {
         this.level.collectItems.forEach(item => {
             if (this.character.isColliding(item)) {
-                if (item.path === '../assets/images/8_coin/coin_1.png') {
+                if (item.imageCache['../assets/images/8_coin/coin_1.png'] ||
+                    item.imageCache['../assets/images/8_coin/coin_2.png']) {
                     this.collectionCoin(item);
                 } else {
                     this.collectionBottle(item);
@@ -90,18 +105,20 @@ class World {
 
 
     collectionCoin(item) {
+        this.coinSound.play();
         this.statusBar.coins += 20;
         this.statusBar.setCoins(this.statusBar.coins);
-        item.deleteCoin();
+        item.deleteItem();
         this.ctx.clearRect(item.x, item.y, item.width, item.height);
         this.statusBar.draw(this.ctx);
     }
 
 
     collectionBottle(item) {
+        this.bottleSound.play();
         this.statusBar.bottle += 20;
         this.statusBar.setBottles(this.statusBar.bottle);
-        item.deleteBottle();
+        item.deleteItem();
         this.ctx.clearRect(item.x, item.y, item.width, item.height);
         this.statusBar.draw(this.ctx);
     }
@@ -110,6 +127,7 @@ class World {
     checkThrowCollisions() {
         if (this.keyboard.d) {
             if (this.statusBar.bottle > 0) {
+                this.bottleThrowSound.play();
                 let bottle = new Throwable(this.character.x + 100, this.character.y + 100);
                 this.throwable.push(bottle);
                 this.statusBar.bottle -= 20;

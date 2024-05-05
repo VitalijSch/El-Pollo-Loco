@@ -27,10 +27,80 @@
     <script src="./js/game.js"></script>
 </head>
 
-<body onload="init()">
+<body>
     <h1>El Pollo Loco</h1>
-
-    <canvas id="canvas" width="720" height="480"></canvas>
+    <canvas id="canvas" class="d-none" width="720" height="480"></canvas>
+    <div class="content">
+        <div class="header-container">
+            <button onclick="init()">Start Game</button>
+            <div class="information-container">
+                <svg onclick="showInformation('story')" xmlns="http://www.w3.org/2000/svg" height="40"
+                    viewBox="0 -960 960 960" width="40">
+                    <path
+                        d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+                </svg>
+                <svg onclick="showInformation('information')" xmlns="http://www.w3.org/2000/svg" height="40"
+                    viewBox="0 -960 960 960" width="40">
+                    <path
+                        d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                </svg>
+                <svg onclick="showInformation('controller')" xmlns="http://www.w3.org/2000/svg" height="40"
+                    viewBox="0 -960 960 960" width="40">
+                    <path
+                        d="M189-160q-60 0-102.5-43T42-307q0-9 1-18t3-18l84-336q14-54 57-87.5t98-33.5h390q55 0 98 33.5t57 87.5l84 336q2 9 3.5 18.5T919-306q0 61-43.5 103.5T771-160q-42 0-78-22t-54-60l-28-58q-5-10-15-15t-21-5H385q-11 0-21 5t-15 15l-28 58q-18 38-54 60t-78 22Zm3-80q19 0 34.5-10t23.5-27l28-57q15-31 44-48.5t63-17.5h190q34 0 63 18t45 48l28 57q8 17 23.5 27t34.5 10q28 0 48-18.5t21-46.5q0 1-2-19l-84-335q-7-27-28-44t-49-17H285q-28 0-49.5 17T208-659l-84 335q-2 6-2 18 0 28 20.5 47t49.5 19Zm348-280q17 0 28.5-11.5T580-560q0-17-11.5-28.5T540-600q-17 0-28.5 11.5T500-560q0 17 11.5 28.5T540-520Zm80-80q17 0 28.5-11.5T660-640q0-17-11.5-28.5T620-680q-17 0-28.5 11.5T580-640q0 17 11.5 28.5T620-600Zm0 160q17 0 28.5-11.5T660-480q0-17-11.5-28.5T620-520q-17 0-28.5 11.5T580-480q0 17 11.5 28.5T620-440Zm80-80q17 0 28.5-11.5T740-560q0-17-11.5-28.5T700-600q-17 0-28.5 11.5T660-560q0 17 11.5 28.5T700-520Zm-360 60q13 0 21.5-8.5T370-490v-40h40q13 0 21.5-8.5T440-560q0-13-8.5-21.5T410-590h-40v-40q0-13-8.5-21.5T340-660q-13 0-21.5 8.5T310-630v40h-40q-13 0-21.5 8.5T240-560q0 13 8.5 21.5T270-530h40v40q0 13 8.5 21.5T340-460Zm140-20Z" />
+                </svg>
+            </div>
+        </div>
+        <svg onclick="closeInformation()" class="arrow-back d-none" xmlns="http://www.w3.org/2000/svg" height="40"
+            viewBox="0 -960 960 960" width="40">
+            <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
+        </svg>
+        <div class="story-container d-none">
+            <p id="story" class="close-information d-none">
+                In the dusty expanses of the Wild West lay a remote farm, its peaceful tranquility threatened by an
+                unusual problem: Giant chickens, inexplicably grown to monstrous sizes, were terrorizing the
+                surroundings.
+                <br><br>
+                Pepe Peligroso, an adventurous Mariachi with a passion for spicy sauce, heard of the danger and decided
+                to come to the farm's aid. Armed with his legendary fiery salsa, he set out on his journey.
+                <br><br>
+                Upon reaching the farm, he witnessed the extent of the threat: A massive chicken with sharp claws and a
+                wild gaze menaced the peace of the farm. Pepe wasted no time and began distributing his spicy sauce to
+                unsettle the giant fowl.
+                <br><br>
+                With a skillful throw of his fiery sauce, Pepe managed to agitate and put the giant chicken to flight.
+                The other chickens, taken aback by the unexpected distraction, followed their leader and vanished into
+                the expanses of the prairie.
+            </p>
+            <p id="information" class="close-information d-none">
+                To progress in the game, the chickens must be defeated. The player can either jump on them or
+                throw
+                bottles to kill them. The Big Chicken can only be defeated by throwing bottles at him.
+            </p>
+            <div id="controller" class="controller close-information d-none">
+                <h2>How to play :</h2>
+                <div class="controller-container">
+                    <div>
+                        LEFT:
+                        <img src="./assets/images/arrow_left.png" alt="arrow left">
+                    </div>
+                    <div>
+                        RIGHT:
+                        <img src="./assets/images/arrow_right.png" alt="arrow right">
+                    </div>
+                    <div>
+                        JUMP:
+                        <img src="./assets/images/space.png" alt="space">
+                    </div>
+                    <div>
+                        THROW BOTTLE:
+                        <span>D</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <img id="background" src="./assets/images/9_intro_outro_screens/start/startscreen_2.png" alt="start screen">
+    </div>
 </body>
 
 </html>

@@ -31,6 +31,5 @@ class EndBoss extends Movable {
         this.offset.left = 50;
         this.offset.right = 50;
         this.offset.bottom = 50;
-        this.enemyMove(this.endBossMove);
     }
 }

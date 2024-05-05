@@ -13,6 +13,12 @@ class Movable extends Drawable {
     otherDirection = false;
 
 
+    constructor(character) {
+        super();
+        this.character = character;
+    }
+
+
     moveLeft() {
         this.x -= this.speedX;
     }
@@ -56,7 +62,7 @@ class Movable extends Drawable {
             this.x + this.offset.left <= mo.x + mo.width - mo.offset.right &&
             this.y + this.offset.top <= mo.y + mo.height - mo.offset.bottom
     }
-    
+
 
     hit() {
         this.energy -= 20;

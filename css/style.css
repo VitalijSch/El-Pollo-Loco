@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-weight: 700;
+    font-family: 'Mexican', sans-serif;
 }
 
 body {
@@ -10,17 +12,155 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 50px;
+    gap: 20px;
     background-image: url('../assets/images/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+}
+
+h1{
     font-family: 'Press Start 2P', cursive;
-    font-weight: 700;
-    font-size: 40px;
+    font-size: 56px;
 }
 
 canvas {
     background-color: black;
     border-radius: 10px;
+}
+
+.content {
+    width: 720px;
+    height: 480px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.header-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    padding: 20px;
+}
+
+.header-container button {
+    background-color: rgb(217, 133, 44);
+    border: 2px solid white;
+    padding: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 20%;
+    z-index: 999;
+}
+
+.header-container button:hover {
+    background-color: rgb(199, 115, 24);
+    scale: 1.02;
+}
+
+.information-container {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+svg {
+    cursor: pointer;
+}
+
+svg:hover {
+    scale: 1.1;
+}
+
+.arrow-back {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+}
+
+.story-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+}
+
+.story-container p {
+    font-size: 16px;
+    padding: 16px;
+    background-color: rgb(255 255 255 / 50%);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.controller {
+    position: absolute;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.controller-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    padding: 24px;
+    background-color: rgb(255 255 255 / 50%);
+    border-radius: 10px;
+}
+
+.controller-container div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.controller-container div img {
+    width: 32px;
+    height: 32px;
+}
+
+.controller-container div span {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content img {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.d-none {
+    display: none;
 }

@@ -1,6 +1,7 @@
 class Drawable {
     imageCache = {};
     currentImage = 0;
+    deleted = false;
     img;
     width;
     height;
@@ -32,7 +33,9 @@ class Drawable {
 
 
     draw(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        if (!this.deleted) {
+            ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        }
     }
 
 
@@ -44,5 +47,10 @@ class Drawable {
             ctx.rect(this.x, this.y, this.width, this.height);
             ctx.stroke();
         }
+    }
+
+
+    deleteItem() {
+        this.deleted = true;
     }
 }

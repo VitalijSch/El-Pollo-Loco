@@ -1,14 +1,15 @@
 class World {
-    throwable = [];
     character = new Character();
     movable = new Movable(this.character);
     drawable = new Drawable();
     statusBar = new StatusBar();
     level = level1;
     cameraX = -100;
+    throwable = [];
     bottleThrowSound = new Audio('../assets/audio/bottle.mp3');
     coinSound = new Audio('../assets/audio/coin.mp3');
     bottleSound = new Audio('../assets/audio/collect_bottle.mp3');
+    chickenSound = new Audio('../assets/audio/chicken.mp3');
     ctx;
     canvas;
     keyboard;
@@ -53,8 +54,11 @@ class World {
         setInterval(() => {
             this.checkThrowCollisions();
             this.checkCollections();
+            this.checkCollisionsJump();
         }, 100)
-        this.checkCollisionsJump();
+        setInterval(() => {
+            this.checkCollisionThrow();
+        }, 700);
     }
 
 
@@ -68,59 +72,92 @@ class World {
     }
 
 
-    checkCollisionsJump() {
-        this.level.enemies.forEach(enemy => {
-            setInterval(() => {
-                if (this.character.y < 170 || this.speedY > 0) {
-                    this.y -= this.speedY;
-                    this.speedY -= this.accelaration;
-                    if (this.character.isColliding(enemy)) {
-                        console.log(enemy)
-                        enemy.path = '../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png';
-                        enemy.img = new Image();
-                        enemy.img.src = enemy.path;
-                        if (!this.drawable.deleted) {
-                            this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+    checkCollisionThrow() {
+        this.throwable.forEach(throwable => {
+            this.level.enemies.forEach(enemy => {
+                if (throwable.isColliding(enemy)) {
+                    if (enemy instanceof EndBoss) {
+                        enemy.isHit = true;
+                        enemy.energy -= 10;
+                        enemy.hit();
+                        this.statusBar.setEndBoss(enemy.energy);
+                        enemy.endBossHurtAnimation();
+                        if (enemy.energy === 0) {
+                            enemy.endBossDeadAnimation();
+                        }
+                    } else {
+                        let index = this.level.enemies.findIndex(findEnemy => findEnemy.id === enemy.id);
+                        if (index !== -1) {
+                            this.level.enemies.splice(index, 1);
                         }
                     }
+                } else {
+                    enemy.isHit = false;
                 }
-            }, 1000 / 30);
+            })
+        })
+    }
+
+
+    checkCollisionsJump() {
+        this.level.enemies.forEach(enemy => {
+            if (this.character.speedY < 0) {
+                this.y -= this.speedY;
+                this.speedY -= this.accelaration;
+                if (this.character.isColliding(enemy)) {
+                    this.chickenSound.play();
+                    let path;
+                    if (enemy instanceof SmallChicken) {
+                        path = '../assets/images/3_enemies_chicken/chicken_small/2_dead/dead.png';
+                    } else if (enemy instanceof Chicken) {
+                        path = '../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png';
+                    } else {
+                        return;
+                    }
+                    enemy.img = new Image();
+                    enemy.img.src = path;
+                    setTimeout(() => {
+                        let index = this.level.enemies.findIndex(findEnemy => findEnemy.id === enemy.id);
+                        if (index !== -1) {
+                            this.level.enemies.splice(index, 1);
+                        }
+                    }, 150);
+                }
+            }
         });
     }
 
 
 
     checkCollections() {
-        this.level.collectItems.forEach(item => {
+        this.level.collectItems.forEach((item, index) => {
             if (this.character.isColliding(item)) {
                 if (item.imageCache['../assets/images/8_coin/coin_1.png'] ||
                     item.imageCache['../assets/images/8_coin/coin_2.png']) {
-                    this.collectionCoin(item);
+                    this.collectionCoin(index);
                 } else {
-                    this.collectionBottle(item);
+                    this.collectionBottle(index);
                 }
             }
         })
     }
 
 
-    collectionCoin(item) {
+    collectionCoin(index) {
         this.coinSound.play();
-        this.statusBar.coins += 20;
+        this.statusBar.coins += 10;
         this.statusBar.setCoins(this.statusBar.coins);
-        item.deleteItem();
-        this.ctx.clearRect(item.x, item.y, item.width, item.height);
         this.statusBar.draw(this.ctx);
+        this.level.collectItems.splice(index, 1);
     }
 
 
-    collectionBottle(item) {
+    collectionBottle(index) {
         this.bottleSound.play();
-        this.statusBar.bottle += 20;
+        this.statusBar.bottle += 10;
         this.statusBar.setBottles(this.statusBar.bottle);
-        item.deleteItem();
-        this.ctx.clearRect(item.x, item.y, item.width, item.height);
         this.statusBar.draw(this.ctx);
+        this.level.collectItems.splice(index, 1);
     }
 
 
@@ -128,13 +165,14 @@ class World {
         if (this.keyboard.d) {
             if (this.statusBar.bottle > 0) {
                 this.bottleThrowSound.play();
-                let bottle = new Throwable(this.character.x + 100, this.character.y + 100);
-                this.throwable.push(bottle);
-                this.statusBar.bottle -= 20;
+                this.statusBar.bottle -= 10;
                 this.statusBar.setBottles(this.statusBar.bottle);
+                let bottle = new Throwable(this.character.x + 100, this.character.y + 100, this.character.otherDirection);
+                this.throwable.push(bottle);
             }
         }
     }
+
 
 
     addObjectsToMap(object) {
@@ -148,7 +186,8 @@ class World {
         if (mo.otherDirection) {
             this.flipImage(mo);
         }
-        mo.drawFrame(this.ctx);
+        // mo.drawFrame(this.ctx);
+        mo.drawFrameWithOffset(this.ctx);
         mo.draw(this.ctx);
         if (mo.otherDirection) {
             this.flipImageBack(mo);

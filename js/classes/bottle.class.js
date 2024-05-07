@@ -12,10 +12,6 @@ class Bottle extends Movable {
         this.height = 50;
         this.x = x + Math.random() * 500;
         this.y = 370;
-        this.offset.top = 10;
-        this.offset.left = 10;
-        this.offset.right = 10;
-        this.offset.bottom = 10;
         this.img = this.imageCache[img];
     }
 }

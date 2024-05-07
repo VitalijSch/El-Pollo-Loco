@@ -1,7 +1,6 @@
 class Drawable {
     imageCache = {};
     currentImage = 0;
-    deleted = false;
     img;
     width;
     height;
@@ -33,24 +32,33 @@ class Drawable {
 
 
     draw(ctx) {
-        if (!this.deleted) {
-            ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-        }
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
 
 
-    drawFrame(ctx) {
+    // drawFrame(ctx) {
+    //     if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Throwable || this instanceof EndBoss) {
+    //         ctx.beginPath();
+    //         ctx.lineWidth = 5;
+    //         ctx.strokeStyle = 'blue';
+    //         ctx.rect(this.x, this.y, this.width, this.height);
+    //         ctx.stroke();
+    //     }
+    // }
+
+
+    drawFrameWithOffset(ctx) {
         if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Throwable || this instanceof EndBoss) {
             ctx.beginPath();
             ctx.lineWidth = 5;
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
+            ctx.strokeStyle = 'red';
+            ctx.rect(
+                this.x + (this.offset.left || 0),
+                this.y + (this.offset.top || 0),
+                this.width - (this.offset.left || 0) - (this.offset.right || 0),
+                this.height - (this.offset.top || 0) - (this.offset.bottom || 0)
+            );
             ctx.stroke();
         }
-    }
-
-
-    deleteItem() {
-        this.deleted = true;
     }
 }

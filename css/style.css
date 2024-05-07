@@ -44,9 +44,10 @@ canvas {
     position: absolute;
     top: 0;
     padding: 20px;
+    z-index: 999;
 }
 
-.header-container button {
+.button {
     background-color: rgb(217, 133, 44);
     border: 2px solid white;
     padding: 8px;
@@ -56,10 +57,10 @@ canvas {
     border-radius: 8px;
     cursor: pointer;
     min-width: 20%;
-    z-index: 999;
+    z-index: 9999;
 }
 
-.header-container button:hover {
+.button:hover {
     background-color: rgb(199, 115, 24);
     scale: 1.02;
 }
@@ -74,6 +75,7 @@ canvas {
 
 svg {
     cursor: pointer;
+    z-index: 9999;
 }
 
 svg:hover {
@@ -84,7 +86,7 @@ svg:hover {
     position: absolute;
     top: 20px;
     right: 20px;
-    z-index: 999;
+    z-index: 9999;
 }
 
 .story-container {
@@ -97,6 +99,7 @@ svg:hover {
     align-items: center;
     justify-content: center;
     padding: 80px;
+    z-index: 999;
 }
 
 .story-container p {
@@ -159,6 +162,36 @@ h2 {
     height: 100%;
     width: 100%;
     border-radius: 10px;
+}
+
+.end-screen-container {
+    width: 720px;
+    height: 480px;
+    position: relative;
+    z-index: 999;
+}
+
+.end-screen-container img {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.end-screen-button-container {
+    position: absolute;
+    bottom: 37px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+#background {
+    position: absolute;
+    top: 0;
 }
 
 .d-none {

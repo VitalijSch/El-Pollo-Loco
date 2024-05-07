@@ -60,6 +60,9 @@ class Character extends Movable {
     snoringSound = new Audio('../assets/audio/snoring.mp3');
     backgroundSound = new Audio('../assets/audio/background.mp3');
     toStandTime;
+    characterAction;
+    characterAnimation;
+    characterHurt;
 
 
     constructor() {
@@ -69,8 +72,11 @@ class Character extends Movable {
         this.height = 250;
         this.x = 80;
         this.y = 170;
-        this.speedX = 2;
-        this.offset.top = 150;
+        this.speedX = 3;
+        this.offset.top = 100;
+        this.offset.left = 15;
+        this.offset.right = 25;
+        this.offset.bottom = 10;
         this.animateCharacter();
         this.applyGravity();
     }
@@ -89,7 +95,7 @@ class Character extends Movable {
 
     animateCharacter() {
         this.toStandTimeValid();
-        setInterval(() => {
+        this.characterAction = setInterval(() => {
             this.moveSound.pause();
             this.characterMoveRight();
             this.characterMoveLeft();
@@ -97,11 +103,11 @@ class Character extends Movable {
             this.characterThrow();
             this.handleCamera();
         }, 1000 / 60);
-        setInterval(() => {
+        this.characterAnimation = setInterval(() => {
             this.toStandAnimation();
             this.handleCharacterAnimation();
         }, 100)
-        setInterval(() => {
+        this.characterHurt = setInterval(() => {
             if (this.isHurt()) {
                 this.hurtSound.play();
             }
@@ -180,6 +186,12 @@ class Character extends Movable {
         if (this.isDead()) {
             this.deadSound.play();
             this.playAnimation(this.characterDeadCache);
+            setTimeout(() => {
+                openEndGameScreen();
+            }, 1000);
+            clearInterval(this.characterAction);
+            clearInterval(this.characterAnimation);
+            clearInterval(this.characterHurt);
         } else if (this.isHurt()) {
             this.playAnimation(this.characterHurtCache);
         } else if (this.isAboveGround()) {

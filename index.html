@@ -8,22 +8,6 @@
     <link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="./css/fonts.css">
     <link rel="stylesheet" href="./css/style.css">
-    <script src="./js/classes/world.class.js"></script>
-    <script src="./js/classes/drawable.class.js"></script>
-    <script src="./js/classes/movable.class.js"></script>
-    <script src="./js/classes/status_bar.class.js"></script>
-    <script src="./js/classes/bottle.class.js"></script>
-    <script src="./js/classes/coin.class.js"></script>
-    <script src="./js/classes/throwable.class.js"></script>
-    <script src="./js/classes/background.class.js"></script>
-    <script src="./js/classes/cloud.class.js"></script>
-    <script src="./js/classes/character.class.js"></script>
-    <script src="./js/classes/chicken.class.js"></script>
-    <script src="./js/classes/small_chicken.class.js"></script>
-    <script src="./js/classes/endBoss.class.js"></script>
-    <script src="./js/classes/keyboard.class.js"></script>
-    <script src="./js/classes/level.class.js"></script>
-    <script src="./js/levels/level_1.js"></script>
     <script src="./js/game.js"></script>
 </head>
 
@@ -32,7 +16,7 @@
     <canvas id="canvas" class="d-none" width="720" height="480"></canvas>
     <div class="content">
         <div class="header-container">
-            <button onclick="init()">Start Game</button>
+            <button onclick="init()" class="button">Start Game</button>
             <div class="information-container">
                 <svg onclick="showInformation('story')" xmlns="http://www.w3.org/2000/svg" height="40"
                     viewBox="0 -960 960 960" width="40">
@@ -97,6 +81,13 @@
                         <span>D</span>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="end-screen-container d-none">
+            <img class="game-over" src="./assets/images/9_intro_outro_screens/game_over/game over.png" alt="game over">
+            <div class="end-screen-button-container">
+                <button onclick="playAgain()" class="button">Play Again</button>
+                <button onclick="backToHome()" class="button">Home</button>
             </div>
         </div>
         <img id="background" src="./assets/images/9_intro_outro_screens/start/startscreen_2.png" alt="start screen">

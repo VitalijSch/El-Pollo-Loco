@@ -11,6 +11,7 @@ class Movable extends Drawable {
     energy = 100;
     lastHit = 0;
     otherDirection = false;
+    id;
 
 
     constructor(character) {
@@ -54,9 +55,6 @@ class Movable extends Drawable {
 
 
     isColliding(mo) {
-        if (mo.deleted) {
-            return false;
-        }
         return this.x + this.width - this.offset.right >= mo.x + mo.offset.left &&
             this.y + this.height - this.offset.bottom >= mo.y + mo.offset.top &&
             this.x + this.offset.left <= mo.x + mo.width - mo.offset.right &&
@@ -65,10 +63,9 @@ class Movable extends Drawable {
 
 
     hit() {
-        this.energy -= 20;
+        this.energy -= 10;
         if (this.energy < 0) {
             this.energy = 0;
-            this.characterDead();
         } else {
             this.lastHit = new Date().getTime();
         }

@@ -6,8 +6,9 @@ class Chicken extends Movable {
     ];
 
 
-    constructor(x) {
+    constructor(x, id) {
         super();
+        this.loadImage('../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png');
         this.loadImage('../assets/images/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
         this.loadImages(this.chickenWalkCache);
         this.width = 55;
@@ -15,6 +16,7 @@ class Chicken extends Movable {
         this.x = x + Math.random() * 500;
         this.y = 350;
         this.speedX = 0.15 + Math.random() * 0.5;
+        this.id = id;
         this.enemyMove(this.chickenWalkCache);
     }
 }

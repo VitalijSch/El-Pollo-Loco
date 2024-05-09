@@ -29,7 +29,7 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/5_dead/D-56.png',
         '../assets/images/2_character_pepe/5_dead/D-57.png',
     ];
-    charactertoStandUnderTenSecondsCache = [
+    characterIdleCache = [
         '../assets/images/2_character_pepe/1_idle/idle/I-1.png',
         '../assets/images/2_character_pepe/1_idle/idle/I-2.png',
         '../assets/images/2_character_pepe/1_idle/idle/I-3.png',
@@ -41,7 +41,7 @@ class Character extends Movable {
         '../assets/images/2_character_pepe/1_idle/idle/I-9.png',
         '../assets/images/2_character_pepe/1_idle/idle/I-10.png',
     ];
-    charactertoStandOverTenSecondsCache = [
+    characterLongIdleCache = [
         '../assets/images/2_character_pepe/1_idle/long_idle/I-11.png',
         '../assets/images/2_character_pepe/1_idle/long_idle/I-12.png',
         '../assets/images/2_character_pepe/1_idle/long_idle/I-13.png',
@@ -57,12 +57,11 @@ class Character extends Movable {
     jumpSound = new Audio('../assets/audio/jump.mp3');
     hurtSound = new Audio('../assets/audio/hurt.mp3');
     deadSound = new Audio('../assets/audio/dead.mp3');
-    snoringSound = new Audio('../assets/audio/snoring.mp3');
-    backgroundSound = new Audio('../assets/audio/background.mp3');
-    toStandTime;
-    characterAction;
-    characterAnimation;
-    characterHurt;
+    longIdleSound = new Audio('../assets/audio/long_Idle.mp3');
+    idleStartTime;
+    actionInterval;
+    animationInterval;
+    hurtInterval;
 
 
     constructor() {
@@ -77,7 +76,7 @@ class Character extends Movable {
         this.offset.left = 15;
         this.offset.right = 25;
         this.offset.bottom = 10;
-        this.animateCharacter();
+        this.characterAnimation();
         this.applyGravity();
     }
 
@@ -88,14 +87,14 @@ class Character extends Movable {
         this.loadImages(this.characterJumpCache);
         this.loadImages(this.characterHurtCache);
         this.loadImages(this.characterDeadCache);
-        this.loadImages(this.charactertoStandUnderTenSecondsCache);
-        this.loadImages(this.charactertoStandOverTenSecondsCache);
+        this.loadImages(this.characterIdleCache);
+        this.loadImages(this.characterLongIdleCache);
     }
 
 
-    animateCharacter() {
-        this.toStandTimeValid();
-        this.characterAction = setInterval(() => {
+    characterAnimation() {
+        this.checkAndUpdateIdleStartTime();
+        this.actionInterval = setInterval(() => {
             this.moveSound.pause();
             this.characterMoveRight();
             this.characterMoveLeft();
@@ -103,15 +102,22 @@ class Character extends Movable {
             this.characterThrow();
             this.handleCamera();
         }, 1000 / 60);
-        this.characterAnimation = setInterval(() => {
-            this.toStandAnimation();
+        this.animationInterval = setInterval(() => {
+            this.updateStandAnimationBasedOnIdleTime();
             this.handleCharacterAnimation();
         }, 100)
-        this.characterHurt = setInterval(() => {
+        this.hurtInterval = setInterval(() => {
             if (this.isHurt()) {
                 this.hurtSound.play();
             }
         }, 380)
+    }
+
+
+    checkAndUpdateIdleStartTime() {
+        if (this.y === 170) {
+            this.idleStartTime = new Date().getTime();
+        }
     }
 
 
@@ -120,7 +126,7 @@ class Character extends Movable {
             this.moveSound.play();
             this.moveRight();
             this.otherDirection = false;
-            this.toStandTime = new Date().getTime();
+            this.idleStartTime = new Date().getTime();
         }
     }
 
@@ -130,7 +136,7 @@ class Character extends Movable {
             this.moveSound.play();
             this.moveLeft();
             this.otherDirection = true;
-            this.toStandTime = new Date().getTime();
+            this.idleStartTime = new Date().getTime();
         }
     }
 
@@ -139,16 +145,17 @@ class Character extends Movable {
         if (this.world.keyboard.space && !this.isAboveGround()) {
             this.jumpSound.play();
             this.jump();
-            this.toStandTime = new Date().getTime();
+            this.idleStartTime = new Date().getTime();
         }
     }
 
 
     characterThrow() {
         if (this.world.keyboard.d) {
-            this.toStandTime = new Date().getTime();
+            this.idleStartTime = new Date().getTime();
         }
     }
+
 
     handleCamera() {
         if (this.x < 2200) {
@@ -159,25 +166,16 @@ class Character extends Movable {
     }
 
 
-    toStandTimeValid() {
-        if (this.y === 170) {
-            this.toStandTime = new Date().getTime();
-        } else {
-            this.toStandTime = 0;
-        }
-    }
-
-
-    toStandAnimation() {
+    updateStandAnimationBasedOnIdleTime() {
         this.loadImage('../assets/images/2_character_pepe/1_idle/idle/I-1.png');
         let currentTime = new Date().getTime();
-        let timepassed = currentTime - this.toStandTime;
+        let timepassed = currentTime - this.idleStartTime;
         if (timepassed >= 15000) {
-            this.snoringSound.play();
-            this.playAnimation(this.charactertoStandOverTenSecondsCache);
+            this.longIdleSound.play();
+            this.playAnimation(this.characterLongIdleCache);
         }
         if (timepassed < 15000 && timepassed > 9999) {
-            this.playAnimation(this.charactertoStandUnderTenSecondsCache);
+            this.playAnimation(this.characterIdleCache);
         }
     }
 
@@ -189,9 +187,9 @@ class Character extends Movable {
             setTimeout(() => {
                 openEndGameScreen();
             }, 1000);
-            clearInterval(this.characterAction);
-            clearInterval(this.characterAnimation);
-            clearInterval(this.characterHurt);
+            clearInterval(this.actionInterval);
+            clearInterval(this.animationInterval);
+            clearInterval(this.hurtInterval);
         } else if (this.isHurt()) {
             this.playAnimation(this.characterHurtCache);
         } else if (this.isAboveGround()) {

@@ -1,0 +1,22 @@
+const scriptFiles = [
+    './js/classes/world.class.js',
+    './js/classes/subclasses/drawable.class.js',
+    './js/classes/subclasses/movable.class.js',
+    './js/classes/status_bar/status_bar.class.js',
+    './js/classes/status_bar/status_health.class.js',
+    './js/classes/status_bar/status_coin.class.js',
+    './js/classes/status_bar/status_bottle.class.js',
+    './js/classes/status_bar/status_big_chicken.class.js',
+    './js/classes/collected_items/coin.class.js',
+    './js/classes/collected_items/bottle.class.js',
+    './js/classes/subclasses/throwable.class.js',
+    './js/classes/backgrounds/background.class.js',
+    './js/classes/backgrounds/cloud.class.js',
+    './js/classes/character/character.class.js',
+    './js/classes/enemies/small_chicken.class.js',
+    './js/classes/enemies/chicken.class.js',
+    './js/classes/enemies/big_Chicken.class.js',
+    './js/classes/level/level.class.js',
+    './js/classes/keyboard/keyboard.class.js',
+    './js/levels/level_1.js'
+];

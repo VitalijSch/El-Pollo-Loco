@@ -8,8 +8,7 @@ class Chicken extends Movable {
 
     constructor(x, id) {
         super();
-        this.loadImage('../assets/images/3_enemies_chicken/chicken_normal/2_dead/dead.png');
-        this.loadImage('../assets/images/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
+        this.loadImage(this.chickenWalkCache[0]);
         this.loadImages(this.chickenWalkCache);
         this.width = 55;
         this.height = 55;

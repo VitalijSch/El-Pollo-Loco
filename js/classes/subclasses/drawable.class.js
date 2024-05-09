@@ -36,19 +36,19 @@ class Drawable {
     }
 
 
-    // drawFrame(ctx) {
-    //     if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Throwable || this instanceof EndBoss) {
-    //         ctx.beginPath();
-    //         ctx.lineWidth = 5;
-    //         ctx.strokeStyle = 'blue';
-    //         ctx.rect(this.x, this.y, this.width, this.height);
-    //         ctx.stroke();
-    //     }
-    // }
+    drawFrame(ctx) {
+        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Throwable || this instanceof BigChicken) {
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'blue';
+            ctx.rect(this.x, this.y, this.width, this.height);
+            ctx.stroke();
+        }
+    }
 
 
     drawFrameWithOffset(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Throwable || this instanceof EndBoss) {
+        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Throwable || this instanceof BigChicken) {
             ctx.beginPath();
             ctx.lineWidth = 5;
             ctx.strokeStyle = 'red';

@@ -8,8 +8,7 @@ class SmallChicken extends Movable {
 
     constructor(x, id) {
         super();
-        this.loadImage('../assets/images/3_enemies_chicken/chicken_small/2_dead/dead.png');
-        this.loadImage('../assets/images/3_enemies_chicken/chicken_small/1_walk/1_w.png');
+        this.loadImage(this.smallChickenWalkCache[0]);
         this.loadImages(this.smallChickenWalkCache);
         this.width = 45;
         this.height = 45;

@@ -1,5 +1,5 @@
-class EndBoss extends Movable {
-    endBossAnimation = [
+class BigChicken extends Movable {
+    bigChickenAlertCache = [
         '../assets/images/4_enemie_boss_chicken/2_alert/G5.png',
         '../assets/images/4_enemie_boss_chicken/2_alert/G6.png',
         '../assets/images/4_enemie_boss_chicken/2_alert/G7.png',
@@ -9,35 +9,33 @@ class EndBoss extends Movable {
         '../assets/images/4_enemie_boss_chicken/2_alert/G11.png',
         '../assets/images/4_enemie_boss_chicken/2_alert/G12.png',
     ];
-    endBossMove = [
+    bigChickenWalkCache = [
         '../assets/images/4_enemie_boss_chicken/1_walk/G1.png',
         '../assets/images/4_enemie_boss_chicken/1_walk/G2.png',
         '../assets/images/4_enemie_boss_chicken/1_walk/G3.png',
         '../assets/images/4_enemie_boss_chicken/1_walk/G4.png',
     ];
-    endBossHurt = [
+    bigChickenHurtCache = [
         '../assets/images/4_enemie_boss_chicken/4_hurt/G21.png',
         '../assets/images/4_enemie_boss_chicken/4_hurt/G22.png',
         '../assets/images/4_enemie_boss_chicken/4_hurt/G23.png',
     ];
-    endBossDead = [
+    bigChickenDeadCache = [
         '../assets/images/4_enemie_boss_chicken/5_dead/G24.png',
         '../assets/images/4_enemie_boss_chicken/5_dead/G25.png',
         '../assets/images/4_enemie_boss_chicken/5_dead/G26.png',
     ];
-    isHit = false;
+    bigChickenSound = new Audio('../assets/audio/big_chicken.mp3');
+    isBigChickenHit = false;
 
 
     constructor() {
         super();
-        this.loadImage('../assets/images/4_enemie_boss_chicken/1_walk/G1.png');
-        this.loadImage('../assets/images/4_enemie_boss_chicken/4_hurt/G21.png');
-        this.loadImage('../assets/images/4_enemie_boss_chicken/5_dead/G24.png');
-        this.loadImage('../assets/images/4_enemie_boss_chicken/2_alert/G5.png');
-        this.loadImages(this.endBossAnimation);
-        this.loadImages(this.endBossMove);
-        this.loadImages(this.endBossHurt);
-        this.loadImages(this.endBossDead);
+        this.loadImage(this.bigChickenAlertCache[0]);
+        this.loadImages(this.bigChickenAlertCache);
+        this.loadImages(this.bigChickenWalkCache);
+        this.loadImages(this.bigChickenHurtCache);
+        this.loadImages(this.bigChickenDeadCache);
         this.width = 250;
         this.height = 350;
         this.x = 2500;
@@ -50,22 +48,24 @@ class EndBoss extends Movable {
     }
 
 
-    animationEndBoss() {
+    bigChickenAlertAnimation() {
         setInterval(() => {
-            this.playAnimation(this.endBossAnimation);
+            this.bigChickenSound.play();
+            this.playAnimation(this.bigChickenAlertCache);
         }, 150);
     }
 
-    endBossHurtAnimation() {
+    bigChickenHurtAnimation() {
         setInterval(() => {
-            this.playAnimation(this.endBossHurt);
+            this.bigChickenSound.play();
+            this.playAnimation(this.bigChickenHurtCache);
         }, 150);
     }
 
 
-    endBossDeadAnimation() {
+    bigChickenDeadAnimation() {
         setInterval(() => {
-            this.playAnimation(this.endBossDead);
-        }, 200);
+            this.playAnimation(this.bigChickenDeadCache);
+        }, 150);
     }
 }

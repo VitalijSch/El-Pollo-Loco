@@ -1,25 +1,24 @@
-const scriptFiles = [
-    './js/classes/world.class.js',
-    './js/classes/drawable.class.js',
-    './js/classes/movable.class.js',
-    './js/classes/status_bar.class.js',
-    './js/classes/bottle.class.js',
-    './js/classes/coin.class.js',
-    './js/classes/throwable.class.js',
-    './js/classes/background.class.js',
-    './js/classes/cloud.class.js',
-    './js/classes/character.class.js',
-    './js/classes/chicken.class.js',
-    './js/classes/small_chicken.class.js',
-    './js/classes/endBoss.class.js',
-    './js/classes/level.class.js',
-    './js/classes/keyboard.class.js',
-    './js/levels/level_1.js'
-];
+let backgroundSound = new Audio('../assets/audio/background.mp3');
 let scriptsLoaded = false;
 let keyboard;
 let canvas;
 let world;
+
+
+async function init() {
+    if (!scriptsLoaded) {
+        await loadScripts(scriptFiles);
+    }
+    canvas = document.getElementById('canvas');
+    let content = document.querySelector('.content');
+    content.classList.add('d-none');
+    canvas.classList.remove('d-none');
+    if (!world) {
+        keyboard = new Keyboard();
+        world = new World(canvas, keyboard);
+    }
+    backgroundSound.play();
+}
 
 
 async function loadScripts(scriptFiles) {
@@ -34,24 +33,6 @@ async function loadScripts(scriptFiles) {
         });
     }
     scriptsLoaded = true;
-}
-
-async function init() {
-    try {
-        if (!scriptsLoaded) {
-        await loadScripts(scriptFiles);
-        }
-        canvas = document.getElementById('canvas');
-        let content = document.querySelector('.content');
-        content.classList.add('d-none');
-        canvas.classList.remove('d-none');
-        if (!world) {
-        keyboard = new Keyboard();
-        world = new World(canvas, keyboard);
-        }
-    } catch (error) {
-        console.error('Error loading scripts:', error);
-    }
 }
 
 
@@ -108,6 +89,8 @@ function openEndGameScreen() {
     content.classList.remove('d-none');
     headerContainer.classList.add('d-none');
     endScreenContainer.classList.remove('d-none');
+    backgroundSound.pause();
+    backgroundSound.currentTime = 0;
 }
 
 

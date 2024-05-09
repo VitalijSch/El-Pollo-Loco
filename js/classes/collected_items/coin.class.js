@@ -1,13 +1,7 @@
 class Coin extends Movable {
-    coinsCache = [
-        '../assets/images/8_coin/coin_1.png',
-        '../assets/images/8_coin/coin_2.png',
-    ];
-
-
     constructor(x, y, img) {
         super();
-        this.loadImages(this.coinsCache);
+        this.loadImage(img);
         this.width = 100;
         this.height = 100;
         this.x = x + Math.random() * 500;
@@ -16,6 +10,5 @@ class Coin extends Movable {
         this.offset.left = 25;
         this.offset.right = 25;
         this.offset.bottom = 25;
-        this.img = this.imageCache[img];
     }
 }

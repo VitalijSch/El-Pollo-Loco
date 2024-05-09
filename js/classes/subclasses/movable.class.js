@@ -14,12 +14,6 @@ class Movable extends Drawable {
     id;
 
 
-    constructor(character) {
-        super();
-        this.character = character;
-    }
-
-
     moveLeft() {
         this.x -= this.speedX;
     }
@@ -47,12 +41,11 @@ class Movable extends Drawable {
 
     isAboveGround() {
         if (this instanceof Throwable) {
-            return true;
+          return this.y < 370;
         } else {
-            return this.y < 170;
+          return this.y < 170;
         }
-    }
-
+      }
 
     isColliding(mo) {
         return this.x + this.width - this.offset.right >= mo.x + mo.offset.left &&
@@ -63,7 +56,7 @@ class Movable extends Drawable {
 
 
     hit() {
-        this.energy -= 10;
+        this.energy -= 20;
         if (this.energy < 0) {
             this.energy = 0;
         } else {

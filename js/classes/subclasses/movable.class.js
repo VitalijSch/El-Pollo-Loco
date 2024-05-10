@@ -5,6 +5,7 @@ class Movable extends Drawable {
         right: 0,
         bottom: 0
     };
+    sounds = new Sounds();
     speedX = 0.2;
     speedY = 0;
     accelaration = 2.5;
@@ -41,11 +42,17 @@ class Movable extends Drawable {
 
     isAboveGround() {
         if (this instanceof Throwable) {
-          return this.y < 370;
+            return this.y < 370;
         } else {
-          return this.y < 170;
+            return this.y < 170;
         }
-      }
+    }
+
+
+    moveDown() {
+        return this.speedY < 0;
+    }
+
 
     isColliding(mo) {
         return this.x + this.width - this.offset.right >= mo.x + mo.offset.left &&
@@ -77,12 +84,20 @@ class Movable extends Drawable {
     }
 
 
-    enemyMove(enemy) {
+    enemyMove() {
         setInterval(() => {
             this.moveLeft();
         }, 1000 / 60);
+    }
+
+
+    enemyAnimation(enemyDead, enemyWalk) {
         setInterval(() => {
-            this.playAnimation(enemy);
+            if (this.speedX === 0) {
+                this.playAnimation(enemyDead)
+            } else {
+                this.playAnimation(enemyWalk);
+            }
         }, 200);
     }
 }

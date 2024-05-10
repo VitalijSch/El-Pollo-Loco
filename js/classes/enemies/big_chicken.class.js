@@ -15,6 +15,16 @@ class BigChicken extends Movable {
         '../assets/images/4_enemie_boss_chicken/1_walk/G3.png',
         '../assets/images/4_enemie_boss_chicken/1_walk/G4.png',
     ];
+    bigChickenAttackCache = [
+        '../assets/images/4_enemie_boss_chicken/3_attack/G13.png',
+        '../assets/images/4_enemie_boss_chicken/3_attack/G14.png',
+        '../assets/images/4_enemie_boss_chicken/3_attack/G15.png',
+        '../assets/images/4_enemie_boss_chicken/3_attack/G16.png',
+        '../assets/images/4_enemie_boss_chicken/3_attack/G17.png',
+        '../assets/images/4_enemie_boss_chicken/3_attack/G18.png',
+        '../assets/images/4_enemie_boss_chicken/3_attack/G19.png',
+        '../assets/images/4_enemie_boss_chicken/3_attack/G20.png',
+    ];
     bigChickenHurtCache = [
         '../assets/images/4_enemie_boss_chicken/4_hurt/G21.png',
         '../assets/images/4_enemie_boss_chicken/4_hurt/G22.png',
@@ -25,8 +35,7 @@ class BigChicken extends Movable {
         '../assets/images/4_enemie_boss_chicken/5_dead/G25.png',
         '../assets/images/4_enemie_boss_chicken/5_dead/G26.png',
     ];
-    bigChickenSound = new Audio('../assets/audio/big_chicken.mp3');
-    isBigChickenHit = false;
+    hadFirstContact = false;
 
 
     constructor() {
@@ -34,14 +43,15 @@ class BigChicken extends Movable {
         this.loadImage(this.bigChickenAlertCache[0]);
         this.loadImages(this.bigChickenAlertCache);
         this.loadImages(this.bigChickenWalkCache);
+        this.loadImages(this.bigChickenAttackCache);
         this.loadImages(this.bigChickenHurtCache);
         this.loadImages(this.bigChickenDeadCache);
         this.width = 250;
         this.height = 350;
         this.x = 2500;
         this.y = 90;
-        this.speedX = 0.30 + Math.random() * 0.7;
-        this.offset.top = 25;
+        this.speedX = 5.5;
+        this.offset.top = 50;
         this.offset.left = 25;
         this.offset.right = 25;
         this.offset.bottom = 25;
@@ -49,23 +59,36 @@ class BigChicken extends Movable {
 
 
     bigChickenAlertAnimation() {
-        setInterval(() => {
-            this.bigChickenSound.play();
-            this.playAnimation(this.bigChickenAlertCache);
-        }, 150);
+        if (!soundMuted) {
+            this.sounds.bigChickenSound.play();
+        }
+        this.playAnimation(this.bigChickenAlertCache);
     }
 
+
+    bigChickenWalkAnimation() {
+        this.speedX = 0.2;
+        this.moveLeft();
+        this.playAnimation(this.bigChickenWalkCache);
+    }
+
+
+    bigChickenAttackkAnimation() {
+        this.playAnimation(this.bigChickenAttackCache);
+    }
+
+
     bigChickenHurtAnimation() {
-        setInterval(() => {
-            this.bigChickenSound.play();
-            this.playAnimation(this.bigChickenHurtCache);
-        }, 150);
+        if (!soundMuted) {
+            this.sounds.bigChickenSound.play();
+        }
+        this.speedX = 0;
+        this.playAnimation(this.bigChickenHurtCache);
     }
 
 
     bigChickenDeadAnimation() {
-        setInterval(() => {
-            this.playAnimation(this.bigChickenDeadCache);
-        }, 150);
+        this.speedX = 0;
+        this.playAnimation(this.bigChickenDeadCache);
     }
 }

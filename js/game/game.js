@@ -3,6 +3,7 @@ let scriptsLoaded = false;
 let keyboard;
 let canvas;
 let world;
+let soundMuted = false;
 
 
 async function init() {
@@ -18,6 +19,7 @@ async function init() {
         world = new World(canvas, keyboard);
     }
     backgroundSound.play();
+    document.querySelector('.pause').classList.remove('d-none');
 }
 
 
@@ -34,7 +36,6 @@ async function loadScripts(scriptFiles) {
     }
     scriptsLoaded = true;
 }
-
 
 
 function showInformation(id) {
@@ -84,6 +85,8 @@ function openEndGameScreen() {
     let background = document.getElementById('background');
     let headerContainer = document.querySelector('.header-container');
     let endScreenContainer = document.querySelector('.end-screen-container');
+    document.querySelector('.pause').classList.add('d-none');
+    document.querySelector('.pause-screen-container').classList.add('d-none');
     background.src = '../assets/images/5_background/first_half_background.png';
     canvas.classList.add('d-none');
     content.classList.remove('d-none');
@@ -109,6 +112,74 @@ function resetGame() {
     canvas = null;
     world = null;
     level1 = null;
+}
+
+
+function togglePauseScreen() {
+    document.querySelector('.pause').classList.toggle('d-none');
+    document.querySelector('.pause-screen-container').classList.toggle('d-none');
+    document.getElementById('pauseScreenController').style.display = 'none';
+    document.querySelector('.pause-screen-icons').style.display = '';
+}
+
+
+function toggleControllerInformation() {
+    document.getElementById('pauseScreenController').style.display = '';
+    document.querySelector('.pause-screen-icons').style.display = 'none';
+}
+
+
+function toggleMutedSound() {
+    let soundOn = document.getElementById('soundOn');
+    let soundOff = document.getElementById('soundOff');
+    soundMuted = !soundMuted;
+    if (soundMuted) {
+        backgroundSound.pause();
+    } else {
+        backgroundSound.play();
+    }
+    soundOn.classList.toggle('d-none');
+    soundOff.classList.toggle('d-none');
+}
+
+
+function fullscreen() {
+    let fullscreen = document.getElementById('fullscreen');
+    enterFullscreen(fullscreen);
+}
+
+
+function enterFullscreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    }
+    toggleFullscreen();
+    togglePauseScreen();
+}
+
+function closeFullscreen() {
+    exitFullscreen();
+    togglePauseScreen();
+    toggleFullscreen();
+}
+
+
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
+}
+
+
+function toggleFullscreen() {
+    document.getElementById('enterFullscreen').classList.toggle('d-none');
+    document.getElementById('exitFullscreen').classList.toggle('d-none');
 }
 
 

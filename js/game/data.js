@@ -1,7 +1,8 @@
 const scriptFiles = [
-    './js/classes/world.class.js',
     './js/classes/subclasses/drawable.class.js',
     './js/classes/subclasses/movable.class.js',
+    './js/classes/subclasses/sounds.class.js',
+    './js/classes/world.class.js',
     './js/classes/status_bar/status_bar.class.js',
     './js/classes/status_bar/status_health.class.js',
     './js/classes/status_bar/status_coin.class.js',

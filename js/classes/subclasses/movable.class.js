@@ -11,6 +11,7 @@ class Movable extends Drawable {
     accelaration = 2.5;
     energy = 100;
     lastHit = 0;
+    hitEnemy = false;
     otherDirection = false;
     id;
 
@@ -85,19 +86,23 @@ class Movable extends Drawable {
 
 
     enemyMove() {
-        setInterval(() => {
-            this.moveLeft();
-        }, 1000 / 60);
+        if (!isPausedGame) {
+            setInterval(() => {
+                this.moveLeft();
+            }, 1000 / 60);
+        }
     }
 
 
     enemyAnimation(enemyDead, enemyWalk) {
-        setInterval(() => {
-            if (this.speedX === 0) {
-                this.playAnimation(enemyDead)
-            } else {
-                this.playAnimation(enemyWalk);
-            }
-        }, 200);
+        if (!isPausedGame) {
+            setInterval(() => {
+                if (this.speedX === 0) {
+                    this.playAnimation(enemyDead)
+                } else {
+                    this.playAnimation(enemyWalk);
+                }
+            }, 200);
+        }
     }
 }

@@ -63,38 +63,51 @@ class World extends Movable {
 
 
     run() {
-        setInterval(() => {
-            this.checkCharacterEnemyCollisionsAndUpdateHealth();
-        }, 1000)
-        setInterval(() => {
-            this.handleCollectibleItemsCollision();
-            this.checkCollisionsJump();
-            this.handleBottleThrowing();
-        }, 1)
-        setInterval(() => {
-            this.handleThrowableCollisionsWithEnemies();
-            this.characterSeeBigChicken();
-        }, 100)
+        if (!isPausedGame) {
+            setInterval(() => {
+                this.checkCharacterEnemyCollisionsAndUpdateHealth();
+            }, 1000)
+            setInterval(() => {
+                this.handleCollectibleItemsCollision();
+                this.checkCollisionsJump();
+                this.handleBottleThrowing();
+            }, 1)
+            setInterval(() => {
+                this.handleThrowableCollisionsWithEnemies();
+                this.characterSeeBigChicken();
+            }, 150)
+        }
     }
 
 
     characterSeeBigChicken() {
         this.level.bigChicken.forEach(chicken => {
-            if (this.character.x >= 2200 && !chicken.hadFirstContact) {
+            if (this.character.x >= 2000 && !chicken.hadFirstContact) {
+                chicken.speedX = 0;
                 chicken.bigChickenAlertAnimation();
-                chicken.hadFirstContact = true;
+                setTimeout(() => {
+                    chicken.hadFirstContact = true;
+                }, 1500);
             }
             if (this.character.isColliding(chicken) && this.character.y >= 170 && chicken.hadFirstContact) {
+                chicken.speedX = 0;
                 chicken.bigChickenAttackkAnimation();
-            } else if (chicken.hadFirstContact) {
-                chicken.bigChickenWalkAnimation();
-            }
-            if (this.statusBigChicken.health === 0) {
+            } else if (chicken.hitEnemy) {
+                chicken.speedX = 0;
+                chicken.bigChickenHurtAnimation();
+                setTimeout(() => {
+                    chicken.hitEnemy = false;
+                }, 500)
+            } else if (this.statusBigChicken.health === 0 && !chicken.hitEnemy) {
+                chicken.speedX = 0;
                 chicken.bigChickenDeadAnimation();
                 this.sounds.winSound.play();
                 setTimeout(() => {
                     backToHome();
                 }, 3000);
+            } else if (chicken.hadFirstContact) {
+                chicken.speedX = 5.5;
+                chicken.bigChickenWalkAnimation();
             }
 
         })
@@ -231,27 +244,29 @@ class World extends Movable {
                         enemyArray.forEach(enemy => {
                             if (bottle.isColliding(enemy)) {
                                 bottle.hitEnemy = true;
+                                enemy.hitEnemy = true;
                                 bottle.x = enemy.x;
-                                bottle.y = enemy.y;
                                 this.validateEnemy(enemy, enemyArray);
+                            }
+                            if (bottle.hitEnemy || !bottle.isAboveGround()) {
+                                bottle.speedY = 0;
+                                bottle.accelaration = 0;
+                                clearInterval(bottleInterval);
                             }
                         })
                     });
-                    if (bottle.hitEnemy || !bottle.isAboveGround()) {
-                        clearInterval(bottleInterval); // Lösche das Interval, wenn die Flasche einen Gegner trifft oder den Boden berührt
-                    }
                 }, 1000 / 40);
                 this.isThrowing = true;
                 setTimeout(() => {
                     this.isThrowing = false;
-                }, 1000);
+                }, 500);
                 setTimeout(() => {
                     this.throwable.splice(0, 1);
-                }, 2000);
+                }, 1300);
             }
         }
     }
-    
+
 
 
 

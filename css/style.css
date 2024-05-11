@@ -19,15 +19,23 @@ body {
     background-position: center;
 }
 
-h1{
+a {
+    font-size: 20px;
+    color: black;
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    z-index: 9999;
+    text-decoration: none;
+}
+
+h1 {
     font-family: 'Press Start 2P', cursive;
     font-size: 56px;
 }
 
 #fullscreen {
     position: relative;
-    width: 720px;
-    height: 480px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,8 +97,8 @@ h1{
 
 
 .pause-screen-container button:hover {
-        background-color: rgb(50, 50, 50);
-        scale: 1.02;
+    background-color: rgb(50, 50, 50);
+    scale: 1.02;
 }
 
 canvas {
@@ -263,10 +271,141 @@ h2 {
 #background {
     position: absolute;
     top: 0;
-    height: 100%;
+}
+
+.rotate-screen-container {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    font-size: 48px;
+    font-weight: 700;
+    text-align: center;
+}
+
+#rotate-screen {
+    height: 100px;
+    width: 100px;
+}
+
+.mobile-keyboard-container {
     width: 100%;
+    position: absolute;
+    bottom: 0;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.left-keyboard-container {
+    display: flex;
+    gap: 10px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+}
+
+.right-keyboard-container {
+    display: flex;
+    gap: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
 }
 
 .d-none {
     display: none;
+}
+
+@media only screen and (max-width: 720px) {
+    h1 {
+        display: none;
+    }
+
+    #fullscreen {
+        width: 100%;
+    }
+
+    canvas {
+        width: 100%;
+    }
+
+    .content {
+        width: 480px;
+        height: 480px;
+    }
+
+    .end-screen-container {
+        width: 480px;
+        height: 480px;
+    }
+
+    .story-container #story {
+        height: 100%;
+        overflow: scroll;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .content {
+        width: 320px;
+        height: 320px;
+    }
+
+    .end-screen-container {
+        width: 320px;
+        height: 320px;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .mobile-keyboard-container {
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .button {
+        font-size: 12px;
+        padding: 4px;
+    }
+
+    svg {
+        height: 24px;
+        width: 24px;
+    }
+}
+
+@media only screen and (max-height: 600px) {
+    h1 {
+        display: none;
+    }
+}
+
+@media only screen and (max-height: 480px) {
+    #fullscreen {
+        height: 100vh;
+    }
+
+    canvas {
+        height: 100%;
+    }
+}
+
+@media only screen and (min-height: 650px) and (max-width: 720px) {
+    .rotate-screen-container {
+        display: flex;
+    }
+
+    .rotate-screen-container {
+        font-size: 40px;
+    }
+
+    #rotate-screen {
+        height: 80px;
+        width: 80px;
+    }
+
+    .content {
+        display: none;
+    }
 }

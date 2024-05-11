@@ -88,26 +88,28 @@ class Character extends Movable {
 
 
     characterAnimation() {
-        this.checkAndUpdateIdleStartTime();
-        this.actionInterval = setInterval(() => {
-            this.sounds.moveSound.pause();
-            this.characterMoveRight();
-            this.characterMoveLeft();
-            this.characterJump();
-            this.characterThrow();
-            this.handleCamera();
-        }, 1000 / 60);
-        this.animationInterval = setInterval(() => {
-            this.updateStandAnimationBasedOnIdleTime();
-            this.handleCharacterAnimation();
-        }, 100)
-        this.hurtInterval = setInterval(() => {
-            if (this.isHurt()) {
-                if (!soundMuted) {
-                    this.sounds.hurtSound.play();
+        if (!isPausedGame) {
+            this.checkAndUpdateIdleStartTime();
+            this.actionInterval = setInterval(() => {
+                this.sounds.moveSound.pause();
+                this.characterMoveRight();
+                this.characterMoveLeft();
+                this.characterJump();
+                this.characterThrow();
+                this.handleCamera();
+            }, 1000 / 60);
+            this.animationInterval = setInterval(() => {
+                this.updateStandAnimationBasedOnIdleTime();
+                this.handleCharacterAnimation();
+            }, 100)
+            this.hurtInterval = setInterval(() => {
+                if (this.isHurt()) {
+                    if (!soundMuted) {
+                        this.sounds.hurtSound.play();
+                    }
                 }
-            }
-        }, 380)
+            }, 380)
+        }
     }
 
 

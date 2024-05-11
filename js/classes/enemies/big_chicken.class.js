@@ -67,7 +67,6 @@ class BigChicken extends Movable {
 
 
     bigChickenWalkAnimation() {
-        this.speedX = 0.2;
         this.moveLeft();
         this.playAnimation(this.bigChickenWalkCache);
     }
@@ -82,13 +81,11 @@ class BigChicken extends Movable {
         if (!soundMuted) {
             this.sounds.bigChickenSound.play();
         }
-        this.speedX = 0;
         this.playAnimation(this.bigChickenHurtCache);
     }
 
 
     bigChickenDeadAnimation() {
-        this.speedX = 0;
         this.playAnimation(this.bigChickenDeadCache);
     }
 }

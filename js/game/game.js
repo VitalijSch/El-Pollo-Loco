@@ -1,9 +1,10 @@
 let backgroundSound = new Audio('../assets/audio/background.mp3');
 let scriptsLoaded = false;
+let soundMuted = false;
+let isPausedGame = false;
 let keyboard;
 let canvas;
 let world;
-let soundMuted = false;
 
 
 async function init() {
@@ -12,8 +13,10 @@ async function init() {
     }
     canvas = document.getElementById('canvas');
     let content = document.querySelector('.content');
+    let fullscreen = document.getElementById('fullscreen');
     content.classList.add('d-none');
     canvas.classList.remove('d-none');
+    fullscreen.style = '';
     if (!world) {
         keyboard = new Keyboard();
         world = new World(canvas, keyboard);
@@ -81,6 +84,7 @@ function playAgain() {
 
 function openEndGameScreen() {
     canvas = document.getElementById('canvas');
+    let fullscreen = document.getElementById('fullscreen');
     let content = document.querySelector('.content');
     let background = document.getElementById('background');
     let headerContainer = document.querySelector('.header-container');
@@ -89,6 +93,7 @@ function openEndGameScreen() {
     document.querySelector('.pause-screen-container').classList.add('d-none');
     background.src = '../assets/images/5_background/first_half_background.png';
     canvas.classList.add('d-none');
+    fullscreen.style.display = 'none';
     content.classList.remove('d-none');
     headerContainer.classList.add('d-none');
     endScreenContainer.classList.remove('d-none');
@@ -120,6 +125,7 @@ function togglePauseScreen() {
     document.querySelector('.pause-screen-container').classList.toggle('d-none');
     document.getElementById('pauseScreenController').style.display = 'none';
     document.querySelector('.pause-screen-icons').style.display = '';
+    isPausedGame = !isPausedGame;
 }
 
 

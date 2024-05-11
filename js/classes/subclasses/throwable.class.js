@@ -13,7 +13,6 @@ class Throwable extends Movable {
         '../assets/images/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
         '../assets/images/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png',
     ];
-    hitEnemy = false;
     bottleIsSplash;
 
 
@@ -40,7 +39,7 @@ class Throwable extends Movable {
 
     throwAnimation() {
         setInterval(() => {
-            if (!this.isAboveGround() && this.hitEnemy) {
+            if (this.isAboveGround() && this.hitEnemy) {
                 this.bottleIsSplash = true;
                 this.playAnimation(this.bottleSplashCache);
             } else if (!this.isAboveGround() && !this.hitEnemy) {

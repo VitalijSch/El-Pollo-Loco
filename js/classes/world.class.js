@@ -20,6 +20,7 @@ class World extends Movable {
     canvas;
     keyboard;
     isThrowing = false;
+    animationFrameId;
 
 
     constructor(canvas, keyboard) {
@@ -53,30 +54,37 @@ class World extends Movable {
         this.addToMap(this.statusBigChicken);
         this.ctx.translate(this.cameraX, 0);
         this.addToMap(this.character);
-        this.addObjectsToMap(this.throwable);
         this.addObjectsToMap(this.level.smallChicken);
         this.addObjectsToMap(this.level.chicken);
         this.addObjectsToMap(this.level.bigChicken);
+        this.addObjectsToMap(this.throwable);
         this.ctx.translate(-this.cameraX, 0);
-        requestAnimationFrame(() => this.draw());
+        this.animationFrameId = requestAnimationFrame(() => this.draw());
+    }
+
+
+    pauseAnimation() {
+        cancelAnimationFrame(this.animationFrameId);
+    }
+
+    resumeAnimation() {
+        this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
 
 
     run() {
-        if (!isPausedGame) {
-            setInterval(() => {
-                this.checkCharacterEnemyCollisionsAndUpdateHealth();
-            }, 1000)
-            setInterval(() => {
-                this.handleCollectibleItemsCollision();
-                this.checkCollisionsJump();
-                this.handleBottleThrowing();
-            }, 1)
-            setInterval(() => {
-                this.handleThrowableCollisionsWithEnemies();
-                this.characterSeeBigChicken();
-            }, 150)
-        }
+        setInterval(() => {
+            this.checkCharacterEnemyCollisionsAndUpdateHealth();
+        }, 800)
+        setInterval(() => {
+            this.handleCollectibleItemsCollision();
+            this.checkCollisionsJump();
+            this.handleBottleThrowing();
+        }, 1)
+        setInterval(() => {
+            this.handleThrowableCollisionsWithEnemies();
+            this.characterSeeBigChicken();
+        }, 100)
     }
 
 
@@ -106,10 +114,21 @@ class World extends Movable {
                     backToHome();
                 }, 3000);
             } else if (chicken.hadFirstContact) {
-                chicken.speedX = 5.5;
+                if (this.character.x > chicken.x) {
+                    chicken.otherDirection = true;
+                    chicken.moveRight();
+                } else {
+                    chicken.otherDirection = false;
+                    chicken.moveLeft();
+                }
+                chicken.speedX = 10;
                 chicken.bigChickenWalkAnimation();
             }
-
+            if (isPausedGame) {
+                chicken.speedX = 0;
+            } else {
+                chicken.speedX = 10;
+            }
         })
     }
 
@@ -121,33 +140,13 @@ class World extends Movable {
                     this.character.hit();
                     this.statusHealth.setStatus(this.character.energy, this.statusHealth.statusHealthCache);
                 }
+                if (isPausedGame) {
+                    enemy.speedX = 0;
+                } else {
+                    enemy.speedX = 0.2;
+                }
             });
         });
-    }
-
-
-    handleThrowableCollisionsWithEnemies() {
-        this.throwable.forEach(throwingBottle => {
-            this.enemiesArray.forEach(enemyArray => {
-                enemyArray.forEach(enemy => {
-                    if (throwingBottle.isColliding(enemy)) {
-                        if (throwingBottle.hitEnemy) {
-                            if (enemy instanceof BigChicken) {
-                                this.statusBigChicken.health -= 20;
-                                this.statusBigChicken.setStatus(this.statusBigChicken.health, this.statusBigChicken.statusBigChickenCache);
-                                enemy.bigChickenHurtAnimation();
-                            } else {
-                                let index = enemyArray.findIndex(findEnemy => findEnemy.id === enemy.id);
-                                if (index !== -1) {
-                                    enemyArray.splice(index, 1);
-                                }
-                            }
-                            throwingBottle.hitEnemy = false;
-                        }
-                    }
-                })
-            })
-        })
     }
 
 
@@ -171,7 +170,7 @@ class World extends Movable {
             if (!soundMuted) {
                 this.sounds.chickenSound.play();
             }
-            enemy.isDead = true;
+            enemy.isEnemyDead = true;
             enemy.speedX = 0;
             if (enemy instanceof SmallChicken) {
                 enemy.playAnimation(enemy.smallChickenDeadCache);
@@ -230,7 +229,8 @@ class World extends Movable {
             if (this.statusBottle.bottle > 0) {
                 this.statusBottle.bottle -= 10;
                 this.statusBottle.setStatus(this.statusBottle.bottle, this.statusBottle.statusBottleCache);
-                let bottle = new Throwable(this.character.x + 100, this.character.y + 100, this.character.otherDirection);
+                let offsetBottle = this.character.otherDirection ? -100 : 100;
+                let bottle = new Throwable(this.character.x + offsetBottle, this.character.y, this.character.otherDirection);
                 this.throwable.push(bottle);
                 let bottleInterval = setInterval(() => {
                     if (bottle.isAboveGround() && !bottle.hitEnemy) {
@@ -242,16 +242,18 @@ class World extends Movable {
                     }
                     this.enemiesArray.forEach(enemyArray => {
                         enemyArray.forEach(enemy => {
-                            if (bottle.isColliding(enemy)) {
-                                bottle.hitEnemy = true;
-                                enemy.hitEnemy = true;
-                                bottle.x = enemy.x;
-                                this.validateEnemy(enemy, enemyArray);
-                            }
-                            if (bottle.hitEnemy || !bottle.isAboveGround()) {
-                                bottle.speedY = 0;
-                                bottle.accelaration = 0;
-                                clearInterval(bottleInterval);
+                            if (this.statusBigChicken.health !== 0) {
+                                if (bottle.isColliding(enemy)) {
+                                    bottle.hitEnemy = true;
+                                    bottle.isBottleSplah = true;
+                                    enemy.hitEnemy = true;
+                                    this.validateEnemy(enemy, enemyArray);
+                                }
+                                if (bottle.hitEnemy || !bottle.isAboveGround()) {
+                                    bottle.speedY = 0;
+                                    bottle.accelaration = 0;
+                                    clearInterval(bottleInterval);
+                                }
                             }
                         })
                     });
@@ -268,6 +270,28 @@ class World extends Movable {
     }
 
 
+    handleThrowableCollisionsWithEnemies() {
+        this.throwable.forEach(throwingBottle => {
+            this.enemiesArray.forEach(enemyArray => {
+                enemyArray.forEach(enemy => {
+                    if (throwingBottle.isColliding(enemy)) {
+                        if (throwingBottle.hitEnemy) {
+                            if (enemy instanceof BigChicken) {
+                                this.statusBigChicken.health -= 20;
+                                this.statusBigChicken.setStatus(this.statusBigChicken.health, this.statusBigChicken.statusBigChickenCache);
+                            } else {
+                                let index = enemyArray.findIndex(findEnemy => findEnemy.id === enemy.id);
+                                if (index !== -1) {
+                                    enemyArray.splice(index, 1);
+                                }
+                            }
+                            throwingBottle.hitEnemy = false;
+                        }
+                    }
+                })
+            })
+        })
+    }
 
 
     addObjectsToMap(object) {
@@ -282,7 +306,7 @@ class World extends Movable {
             this.flipImage(mo);
         }
         // mo.drawFrame(this.ctx);
-        mo.drawFrameWithOffset(this.ctx);
+        // mo.drawFrameWithOffset(this.ctx);
         mo.draw(this.ctx);
         if (mo.otherDirection) {
             this.flipImageBack(mo);

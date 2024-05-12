@@ -126,6 +126,13 @@ function togglePauseScreen() {
     document.getElementById('pauseScreenController').style.display = 'none';
     document.querySelector('.pause-screen-icons').style.display = '';
     isPausedGame = !isPausedGame;
+    if (isPausedGame) {
+        world.pauseAnimation();
+        world.character.pauseCharacterInterval();
+    } else {
+        world.resumeAnimation();
+        world.character.characterAnimation();
+    }
 }
 
 

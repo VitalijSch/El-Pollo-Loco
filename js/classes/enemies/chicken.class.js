@@ -17,7 +17,7 @@ class Chicken extends Movable {
         this.width = 55;
         this.height = 55;
         this.x = x + Math.random() * 500;
-        this.y = 350;
+        this.y = 360;
         this.speedX = 0.25 + Math.random() * 0.5;
         this.id = id;
         this.enemyMove();

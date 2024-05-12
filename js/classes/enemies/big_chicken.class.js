@@ -50,11 +50,11 @@ class BigChicken extends Movable {
         this.height = 350;
         this.x = 2500;
         this.y = 90;
-        this.speedX = 5.5;
-        this.offset.top = 50;
-        this.offset.left = 25;
-        this.offset.right = 25;
-        this.offset.bottom = 25;
+        this.speedX = 20;
+        this.offset.top = 100;
+        this.offset.left = 60;
+        this.offset.right = 60;
+        this.offset.bottom = 60;
     }
 
 
@@ -67,7 +67,6 @@ class BigChicken extends Movable {
 
 
     bigChickenWalkAnimation() {
-        this.moveLeft();
         this.playAnimation(this.bigChickenWalkCache);
     }
 

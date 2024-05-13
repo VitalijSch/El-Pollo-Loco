@@ -11,24 +11,35 @@ class Sounds {
     chickenSound = new Audio('../assets/audio/chicken.mp3');
     bigChickenSound = new Audio('../assets/audio/big_chicken.mp3');
     winSound = new Audio('../assets/audio/win.mp3');
+    collectionSounds = [
+        this.moveSound,
+        this.jumpSound,
+        this.hurtSound,
+        this.deadSound,
+        this.longIdleSound,
+        this.bottleThrowSound,
+        this.bottleSplashSound,
+        this.collectCoinSound,
+        this.collectBottleSound,
+        this.chickenSound,
+        this.bigChickenSound,
+        this.winSound,
+    ]
 
 
     mutedSounds() {
         setInterval(() => {
             if (soundMuted) {
-                this.moveSound.pause();
-                this.jumpSound.pause();
-                this.hurtSound.pause();
-                this.deadSound.pause();
-                this.longIdleSound.pause();
-                this.bottleThrowSound.pause();
-                this.bottleSplashSound.pause();
-                this.collectCoinSound.pause();
-                this.collectBottleSound.pause();
-                this.chickenSound.pause();
-                this.bigChickenSound.pause();
-                this.winSound.pause();
+                this.resetSounds();
             }
         }, 100);
+    }
+
+
+    resetSounds() {
+        this.collectionSounds.forEach(sound => {
+            sound.pause();
+            sound.currentTime = 0;
+        })
     }
 }

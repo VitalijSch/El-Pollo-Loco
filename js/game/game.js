@@ -11,18 +11,23 @@ async function init() {
     if (!scriptsLoaded) {
         await loadScripts(scriptFiles);
     }
-    canvas = document.getElementById('canvas');
-    let content = document.querySelector('.content');
-    let fullscreen = document.getElementById('fullscreen');
-    content.classList.add('d-none');
-    canvas.classList.remove('d-none');
-    fullscreen.style = '';
+    showCanvas();
     if (!world) {
         keyboard = new Keyboard();
         world = new World(canvas, keyboard);
     }
-    backgroundSound.play();
-    document.querySelector('.pause').classList.remove('d-none');
+    touchMoves();
+}
+
+
+function touchMoves() {
+    let moveLeft = document.getElementById('moveLeft');
+    let moveRight = document.getElementById('moveRight');
+    let jumpHigh = document.getElementById('jumpHigh');
+    let throwBottle = document.getElementById('throwBottle');
+    movesStart(moveLeft, moveRight, jumpHigh, throwBottle);
+    movesEnd(moveLeft, moveRight, jumpHigh, throwBottle);
+
 }
 
 
@@ -41,7 +46,55 @@ async function loadScripts(scriptFiles) {
 }
 
 
-function showInformation(id) {
+function showCanvas() {
+    canvas = document.getElementById('canvas');
+    let content = document.querySelector('.content');
+    let fullscreen = document.getElementById('fullscreen');
+    document.querySelector('.pause').classList.remove('d-none');
+    content.classList.add('d-none');
+    canvas.classList.remove('d-none');
+    fullscreen.style = '';
+    backgroundSound.play();
+}
+
+
+function movesStart(moveLeft, moveRight, jumpHigh, throwBottle) {
+    moveLeft.addEventListener('touchstart', () => {
+        world.keyboard.left = true;
+    });
+
+    moveRight.addEventListener('touchstart', () => {
+        world.keyboard.right = true;
+    });
+
+    jumpHigh.addEventListener('touchstart', () => {
+        world.keyboard.space = true;
+    });
+    throwBottle.addEventListener('touchstart', () => {
+        world.keyboard.d = true;
+    });
+}
+
+
+function movesEnd(moveLeft, moveRight, jumpHigh, throwBottle) {
+    moveLeft.addEventListener('touchend', () => {
+        world.keyboard.left = false;
+    });
+
+    moveRight.addEventListener('touchend', () => {
+        world.keyboard.right = false;
+    });
+
+    jumpHigh.addEventListener('touchend', () => {
+        world.keyboard.space = false;
+    });
+    throwBottle.addEventListener('touchend', () => {
+        world.keyboard.d = false;
+    });
+}
+
+
+function showInformationContainer(id) {
     let background = document.getElementById('background');
     let arrowBack = document.querySelector('.arrow-back');
     let headerContainer = document.querySelector('.header-container');
@@ -55,7 +108,7 @@ function showInformation(id) {
 }
 
 
-function closeInformation() {
+function closeInformationContainer() {
     let background = document.getElementById('background');
     let arrowBack = document.querySelector('.arrow-back');
     let headerContainer = document.querySelector('.header-container');
@@ -82,23 +135,11 @@ function playAgain() {
 }
 
 
-function openEndGameScreen() {
-    canvas = document.getElementById('canvas');
-    let fullscreen = document.getElementById('fullscreen');
-    let content = document.querySelector('.content');
-    let background = document.getElementById('background');
-    let headerContainer = document.querySelector('.header-container');
-    let endScreenContainer = document.querySelector('.end-screen-container');
-    document.querySelector('.pause').classList.add('d-none');
-    document.querySelector('.pause-screen-container').classList.add('d-none');
-    background.src = '../assets/images/5_background/first_half_background.png';
-    canvas.classList.add('d-none');
-    fullscreen.style.display = 'none';
-    content.classList.remove('d-none');
-    headerContainer.classList.add('d-none');
-    endScreenContainer.classList.remove('d-none');
-    backgroundSound.pause();
-    backgroundSound.currentTime = 0;
+function resetGame() {
+    keyboard = null;
+    canvas = null;
+    world = null;
+    level1 = null;
 }
 
 
@@ -112,11 +153,30 @@ function removeScripts() {
 }
 
 
-function resetGame() {
-    keyboard = null;
-    canvas = null;
-    world = null;
-    level1 = null;
+function openEndGameScreen(id) {
+    canvas = document.getElementById('canvas');
+    let endScreen = document.getElementById(id);
+    let fullscreen = document.getElementById('fullscreen');
+    document.querySelector('.pause').classList.add('d-none');
+    document.querySelector('.pause-screen-container').classList.add('d-none');
+    canvas.classList.add('d-none');
+    endScreen.classList.toggle('d-none');
+    fullscreen.style.display = 'none';
+    showContentContainer();
+    backgroundSound.pause();
+    backgroundSound.currentTime = 0;
+}
+
+
+function showContentContainer() {
+    let content = document.querySelector('.content');
+    let background = document.getElementById('background');
+    let headerContainer = document.querySelector('.header-container');
+    let endScreenContainer = document.querySelector('.end-screen-container');
+    content.classList.remove('d-none');
+    background.src = '../assets/images/5_background/first_half_background.png';
+    headerContainer.classList.add('d-none');
+    endScreenContainer.classList.remove('d-none');
 }
 
 
@@ -148,6 +208,7 @@ function toggleMutedSound() {
     soundMuted = !soundMuted;
     if (soundMuted) {
         backgroundSound.pause();
+        backgroundSound.currentTime = 0;
     } else {
         backgroundSound.play();
     }

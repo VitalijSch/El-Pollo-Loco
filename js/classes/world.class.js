@@ -14,13 +14,14 @@ class World extends Movable {
         this.level.coin,
         this.level.bottle,
     ];
-    cameraX = -100;
     throwable = [];
+    cameraX = -100;
+    isThrowing = false;
     ctx;
     canvas;
     keyboard;
-    isThrowing = false;
     animationFrameId;
+    winInterval;
 
 
     constructor(canvas, keyboard) {
@@ -42,16 +43,32 @@ class World extends Movable {
 
     draw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.renderBackgroundAndObjects();
+        this.renderStatusBar();
+        this.renderCharacterAndObjects();
+        this.animationFrameId = requestAnimationFrame(() => this.draw());
+    }
+
+
+    renderBackgroundAndObjects() {
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.background);
         this.addObjectsToMap(this.level.cloud);
         this.addObjectsToMap(this.level.coin);
         this.addObjectsToMap(this.level.bottle);
         this.ctx.translate(-this.cameraX, 0);
+    }
+
+
+    renderStatusBar() {
         this.addToMap(this.statusHealth);
         this.addToMap(this.statusCoin);
         this.addToMap(this.statusBottle);
         this.addToMap(this.statusBigChicken);
+    }
+
+
+    renderCharacterAndObjects() {
         this.ctx.translate(this.cameraX, 0);
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.smallChicken);
@@ -59,16 +76,6 @@ class World extends Movable {
         this.addObjectsToMap(this.level.bigChicken);
         this.addObjectsToMap(this.throwable);
         this.ctx.translate(-this.cameraX, 0);
-        this.animationFrameId = requestAnimationFrame(() => this.draw());
-    }
-
-
-    pauseAnimation() {
-        cancelAnimationFrame(this.animationFrameId);
-    }
-
-    resumeAnimation() {
-        this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
 
 
@@ -77,59 +84,14 @@ class World extends Movable {
             this.checkCharacterEnemyCollisionsAndUpdateHealth();
         }, 800)
         setInterval(() => {
-            this.handleCollectibleItemsCollision();
             this.checkCollisionsJump();
+            this.handleCollectibleItemsCollision();
             this.handleBottleThrowing();
         }, 1)
-        setInterval(() => {
+        this.winInterval = setInterval(() => {
             this.handleThrowableCollisionsWithEnemies();
             this.characterSeeBigChicken();
         }, 100)
-    }
-
-
-    characterSeeBigChicken() {
-        this.level.bigChicken.forEach(chicken => {
-            if (this.character.x >= 2000 && !chicken.hadFirstContact) {
-                chicken.speedX = 0;
-                chicken.bigChickenAlertAnimation();
-                setTimeout(() => {
-                    chicken.hadFirstContact = true;
-                }, 1500);
-            }
-            if (this.character.isColliding(chicken) && this.character.y >= 170 && chicken.hadFirstContact) {
-                chicken.speedX = 0;
-                chicken.bigChickenAttackkAnimation();
-            } else if (chicken.hitEnemy) {
-                chicken.speedX = 0;
-                chicken.bigChickenHurtAnimation();
-                setTimeout(() => {
-                    chicken.hitEnemy = false;
-                }, 500)
-            } else if (this.statusBigChicken.health === 0 && !chicken.hitEnemy) {
-                chicken.speedX = 0;
-                chicken.bigChickenDeadAnimation();
-                this.sounds.winSound.play();
-                setTimeout(() => {
-                    backToHome();
-                }, 3000);
-            } else if (chicken.hadFirstContact) {
-                if (this.character.x > chicken.x) {
-                    chicken.otherDirection = true;
-                    chicken.moveRight();
-                } else {
-                    chicken.otherDirection = false;
-                    chicken.moveLeft();
-                }
-                chicken.speedX = 10;
-                chicken.bigChickenWalkAnimation();
-            }
-            if (isPausedGame) {
-                chicken.speedX = 0;
-            } else {
-                chicken.speedX = 10;
-            }
-        })
     }
 
 
@@ -170,22 +132,20 @@ class World extends Movable {
             if (!soundMuted) {
                 this.sounds.chickenSound.play();
             }
-            enemy.isEnemyDead = true;
             enemy.speedX = 0;
-            if (enemy instanceof SmallChicken) {
-                enemy.playAnimation(enemy.smallChickenDeadCache);
-            }
-            if (enemy instanceof Chicken) {
-                enemy.playAnimation(enemy.chickenDeadCache);
-            }
-            setTimeout(() => {
-                let index = enemyArray.findIndex(findEnemy => findEnemy.id === enemy.id);
-                if (index !== -1) {
-                    enemyArray.splice(index, 1);
-                }
-            },
-                500);
+            enemy.isEnemyDead = true;
+            this.removeEnemyFromArray(enemyArray, enemy);
         }
+    }
+
+
+    removeEnemyFromArray(enemyArray, enemy) {
+        setTimeout(() => {
+            let index = enemyArray.findIndex(findEnemy => findEnemy.id === enemy.id);
+            if (index !== -1) {
+                enemyArray.splice(index, 1);
+            }
+        }, 300);
     }
 
 
@@ -207,6 +167,10 @@ class World extends Movable {
     collectionCoin(index, itemArray) {
         if (!soundMuted) {
             this.sounds.collectCoinSound.play();
+            setTimeout(() => {
+                this.sounds.collectCoinSound.pause();
+                this.sounds.collectCoinSound.currentTime = 0;
+            }, 500);
         }
         this.statusCoin.coin += 10;
         this.statusCoin.setStatus(this.statusCoin.coin, this.statusCoin.statusCoinCache);
@@ -217,6 +181,10 @@ class World extends Movable {
     collectionBottle(index, itemArray) {
         if (!soundMuted) {
             this.sounds.collectBottleSound.play();
+            setTimeout(() => {
+                this.sounds.collectBottleSound.pause();
+                this.sounds.collectBottleSound.currentTime = 0;
+            }, 500);
         }
         this.statusBottle.bottle += 10;
         this.statusBottle.setStatus(this.statusBottle.bottle, this.statusBottle.statusBottleCache);
@@ -227,46 +195,71 @@ class World extends Movable {
     handleBottleThrowing() {
         if (this.keyboard.d && !this.isThrowing) {
             if (this.statusBottle.bottle > 0) {
-                this.statusBottle.bottle -= 10;
-                this.statusBottle.setStatus(this.statusBottle.bottle, this.statusBottle.statusBottleCache);
-                let offsetBottle = this.character.otherDirection ? -100 : 100;
-                let bottle = new Throwable(this.character.x + offsetBottle, this.character.y, this.character.otherDirection);
-                this.throwable.push(bottle);
-                let bottleInterval = setInterval(() => {
-                    if (bottle.isAboveGround() && !bottle.hitEnemy) {
-                        if (bottle.otherDirection) {
-                            bottle.x -= 6;
-                        } else {
-                            bottle.x += 6;
-                        }
-                    }
-                    this.enemiesArray.forEach(enemyArray => {
-                        enemyArray.forEach(enemy => {
-                            if (this.statusBigChicken.health !== 0) {
-                                if (bottle.isColliding(enemy)) {
-                                    bottle.hitEnemy = true;
-                                    bottle.isBottleSplah = true;
-                                    enemy.hitEnemy = true;
-                                    this.validateEnemy(enemy, enemyArray);
-                                }
-                                if (bottle.hitEnemy || !bottle.isAboveGround()) {
-                                    bottle.speedY = 0;
-                                    bottle.accelaration = 0;
-                                    clearInterval(bottleInterval);
-                                }
-                            }
-                        })
-                    });
-                }, 1000 / 40);
-                this.isThrowing = true;
-                setTimeout(() => {
-                    this.isThrowing = false;
-                }, 500);
-                setTimeout(() => {
-                    this.throwable.splice(0, 1);
-                }, 1300);
+                this.handleBottleThrowingProcess();
             }
         }
+    }
+
+
+    handleBottleThrowingProcess() {
+        this.statusBottle.bottle -= 10;
+        this.statusBottle.setStatus(this.statusBottle.bottle, this.statusBottle.statusBottleCache);
+        let offsetBottle = this.character.otherDirection ? -100 : 100;
+        let bottle = new Throwable(this.character.x + offsetBottle, this.character.y, this.character.otherDirection);
+        this.throwable.push(bottle);
+        this.handleBottleInterval(bottle);
+        this.handleThrowing();
+    }
+
+
+    handleBottleInterval(bottle) {
+        let bottleInterval = setInterval(() => {
+            this.adjustBottlePosition(bottle);
+            this.enemiesArray.forEach(enemyArray => {
+                enemyArray.forEach(enemy => {
+                    if (this.statusBigChicken.health !== 0) {
+                        this.handleBottleCollision(bottle, enemyArray, enemy, bottleInterval);
+                    }
+                })
+            });
+        }, 1000 / 40);
+    }
+
+
+    adjustBottlePosition(bottle) {
+        if (bottle.isAboveGround() && !bottle.hitEnemy) {
+            if (bottle.otherDirection) {
+                bottle.x -= 6;
+            } else {
+                bottle.x += 6;
+            }
+        }
+    }
+
+
+    handleBottleCollision(bottle, enemyArray, enemy, bottleInterval) {
+        if (bottle.isColliding(enemy)) {
+            bottle.hitEnemy = true;
+            bottle.isBottleSplah = true;
+            enemy.hitEnemy = true;
+            this.validateEnemy(enemy, enemyArray);
+        }
+        if (bottle.hitEnemy || !bottle.isAboveGround()) {
+            bottle.speedY = 0;
+            bottle.accelaration = 0;
+            clearInterval(bottleInterval);
+        }
+    }
+
+
+    handleThrowing() {
+        this.isThrowing = true;
+        setTimeout(() => {
+            this.isThrowing = false;
+        }, 500);
+        setTimeout(() => {
+            this.throwable.splice(0, 1);
+        }, 1300);
     }
 
 
@@ -275,22 +268,106 @@ class World extends Movable {
             this.enemiesArray.forEach(enemyArray => {
                 enemyArray.forEach(enemy => {
                     if (throwingBottle.isColliding(enemy)) {
-                        if (throwingBottle.hitEnemy) {
-                            if (enemy instanceof BigChicken) {
-                                this.statusBigChicken.health -= 20;
-                                this.statusBigChicken.setStatus(this.statusBigChicken.health, this.statusBigChicken.statusBigChickenCache);
-                            } else {
-                                let index = enemyArray.findIndex(findEnemy => findEnemy.id === enemy.id);
-                                if (index !== -1) {
-                                    enemyArray.splice(index, 1);
-                                }
-                            }
-                            throwingBottle.hitEnemy = false;
-                        }
+                        this.handleBottleEnemyCollision(throwingBottle, enemyArray, enemy);
                     }
                 })
             })
         })
+    }
+
+
+    handleBottleEnemyCollision(throwingBottle, enemyArray, enemy) {
+        if (throwingBottle.hitEnemy) {
+            if (enemy instanceof BigChicken) {
+                this.statusBigChicken.health -= 20;
+                this.statusBigChicken.setStatus(this.statusBigChicken.health, this.statusBigChicken.statusBigChickenCache);
+            } else {
+                let index = enemyArray.findIndex(findEnemy => findEnemy.id === enemy.id);
+                if (index !== -1) {
+                    enemyArray.splice(index, 1);
+                }
+            }
+            throwingBottle.hitEnemy = false;
+        }
+    }
+
+
+    characterSeeBigChicken() {
+        this.level.bigChicken.forEach(chicken => {
+            this.triggerBigChickenAlert(chicken);
+            if (this.character.isColliding(chicken) && this.character.y >= 170 && chicken.hadFirstContact) {
+                this.triggerBigChickenAttackAnimation(chicken);
+            } else if (chicken.hitEnemy) {
+                this.triggerBigChickenHurtAnimation(chicken);
+            } else if (this.statusBigChicken.health === 0 && !chicken.hitEnemy) {
+                this.triggerBigChickenDeadAnimation(chicken);
+            } else if (chicken.hadFirstContact) {
+                this.triggerBigChickenWalkAnimation(chicken);
+            }
+            this.adjustBigChickenSpeed(chicken);
+        })
+    }
+
+
+    triggerBigChickenAlert(chicken) {
+        if (this.character.x >= 2000 && !chicken.hadFirstContact) {
+            chicken.speedX = 0;
+            chicken.bigChickenAlertAnimation();
+            setTimeout(() => {
+                chicken.hadFirstContact = true;
+            }, 1500);
+        }
+    }
+
+
+    triggerBigChickenAttackAnimation(chicken) {
+        chicken.speedX = 0;
+        chicken.bigChickenAttackkAnimation();
+    }
+
+
+    triggerBigChickenHurtAnimation(chicken) {
+        chicken.speedX = 0;
+        chicken.bigChickenHurtAnimation();
+        setTimeout(() => {
+            chicken.hitEnemy = false;
+        }, 500)
+    }
+
+
+    triggerBigChickenDeadAnimation(chicken) {
+        chicken.speedX = 0;
+        chicken.bigChickenDeadAnimation();
+        backgroundSound.pause();
+        backgroundSound.currentTime = 0;
+        this.sounds.winSound.play();
+        setTimeout(() => {
+            clearInterval(this.winInterval)
+            this.sounds.mutedSounds();
+            openEndGameScreen('youWin');
+        }, 1000);
+    }
+
+
+    triggerBigChickenWalkAnimation(chicken) {
+        if (this.character.x > chicken.x) {
+            chicken.otherDirection = true;
+            chicken.moveRight();
+        } else {
+            chicken.otherDirection = false;
+            chicken.moveLeft();
+        }
+        chicken.speedX = 10;
+        chicken.bigChickenWalkAnimation();
+    }
+
+
+    adjustBigChickenSpeed(chicken) {
+        if (isPausedGame) {
+            chicken.speedX = 0;
+        } else {
+            chicken.speedX = 10;
+        }
     }
 
 
@@ -305,8 +382,6 @@ class World extends Movable {
         if (mo.otherDirection) {
             this.flipImage(mo);
         }
-        // mo.drawFrame(this.ctx);
-        // mo.drawFrameWithOffset(this.ctx);
         mo.draw(this.ctx);
         if (mo.otherDirection) {
             this.flipImageBack(mo);
@@ -325,5 +400,14 @@ class World extends Movable {
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
+    }
+
+
+    pauseAnimation() {
+        cancelAnimationFrame(this.animationFrameId);
+    }
+
+    resumeAnimation() {
+        this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
 }

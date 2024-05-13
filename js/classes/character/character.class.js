@@ -90,31 +90,15 @@ class Character extends Movable {
     characterAnimation() {
         this.checkAndUpdateIdleStartTime();
         this.actionInterval = setInterval(() => {
-            this.sounds.moveSound.pause();
-            this.characterMoveRight();
-            this.characterMoveLeft();
-            this.characterJump();
-            this.characterThrow();
-            this.handleCamera();
+            this.handleCharacterMoves();
         }, 1000 / 60);
         this.animationInterval = setInterval(() => {
             this.updateStandAnimationBasedOnIdleTime();
             this.handleCharacterAnimation();
         }, 100)
         this.hurtInterval = setInterval(() => {
-            if (this.isHurt()) {
-                if (!soundMuted) {
-                    this.sounds.hurtSound.play();
-                }
-            }
+            this.characterIsHurt();
         }, 380)
-    }
-
-
-    pauseCharacterInterval() {
-        clearInterval(this.actionInterval);
-        clearInterval(this.animationInterval);
-        clearInterval(this.hurtInterval);
     }
 
 
@@ -125,10 +109,25 @@ class Character extends Movable {
     }
 
 
+    handleCharacterMoves() {
+        this.sounds.moveSound.pause();
+        this.sounds.moveSound.currentTime = 0;
+        this.characterMoveRight();
+        this.characterMoveLeft();
+        this.characterJump();
+        this.characterThrow();
+        this.handleCamera();
+    }
+
+
     characterMoveRight() {
         if (this.world.keyboard.right && this.x < this.world.level.levelEndX) {
             if (!soundMuted) {
                 this.sounds.moveSound.play();
+                setTimeout(() => {
+                    this.sounds.moveSound.pause();
+                    this.sounds.moveSound.currentTime = 0;
+                }, 500);
             }
             this.moveRight();
             this.otherDirection = false;
@@ -141,6 +140,10 @@ class Character extends Movable {
         if (this.world.keyboard.left && this.x > 0) {
             if (!soundMuted) {
                 this.sounds.moveSound.play();
+                setTimeout(() => {
+                    this.sounds.moveSound.pause();
+                    this.sounds.moveSound.currentTime = 0;
+                }, 500);
             }
             this.moveLeft();
             this.otherDirection = true;
@@ -153,6 +156,10 @@ class Character extends Movable {
         if (this.world.keyboard.space && !this.isAboveGround()) {
             if (!soundMuted) {
                 this.sounds.jumpSound.play();
+                setTimeout(() => {
+                    this.sounds.jumpSound.pause();
+                    this.sounds.jumpSound.currentTime = 0;
+                }, 500);
             }
             this.jump();
             this.idleStartTime = new Date().getTime();
@@ -180,36 +187,78 @@ class Character extends Movable {
         this.loadImage('../assets/images/2_character_pepe/1_idle/idle/I-1.png');
         let currentTime = new Date().getTime();
         let timepassed = currentTime - this.idleStartTime;
+        this.characterSnoring(timepassed);
+        this.characterIdle(timepassed);
+    }
+
+
+    characterSnoring(timepassed) {
         if (timepassed >= 15000) {
             if (!soundMuted) {
                 this.sounds.longIdleSound.play();
+                setTimeout(() => {
+                    this.sounds.longIdleSound.pause();
+                    this.sounds.longIdleSound.currentTime = 0;
+                }, 2000);
             }
             this.playAnimation(this.characterLongIdleCache);
         }
+    }
+
+
+    characterIdle(timepassed) {
         if (timepassed < 15000 && timepassed > 9999) {
             this.playAnimation(this.characterIdleCache);
         }
     }
 
 
+
     handleCharacterAnimation() {
         if (this.isDead()) {
-            if (!soundMuted) {
-                this.sounds.deadSound.play();
-            }
-            this.playAnimation(this.characterDeadCache);
-            setTimeout(() => {
-                openEndGameScreen();
-            }, 1000);
-            clearInterval(this.actionInterval);
-            clearInterval(this.animationInterval);
-            clearInterval(this.hurtInterval);
+            this.characterIsDead();
         } else if (this.isHurt()) {
             this.playAnimation(this.characterHurtCache);
         } else if (this.isAboveGround()) {
             this.playAnimation(this.characterJumpCache);
         } else if (this.world.keyboard.right || this.world.keyboard.left) {
             this.playAnimation(this.characterWalkCache);
+        }
+    }
+
+
+    characterIsDead() {
+        if (!soundMuted) {
+            this.sounds.deadSound.play();
+            setTimeout(() => {
+                this.sounds.deadSound.pause();
+                this.sounds.deadSound.currentTime = 0;
+            }, 1000);
+        }
+        this.playAnimation(this.characterDeadCache);
+        setTimeout(() => {
+            openEndGameScreen('gameOver');
+        }, 1000);
+        this.pauseCharacterInterval();
+    }
+
+
+    pauseCharacterInterval() {
+        clearInterval(this.actionInterval);
+        clearInterval(this.animationInterval);
+        clearInterval(this.hurtInterval);
+    }
+
+
+    characterIsHurt() {
+        if (this.isHurt()) {
+            if (!soundMuted) {
+                this.sounds.hurtSound.play();
+                setTimeout(() => {
+                    this.sounds.hurtSound.pause();
+                    this.sounds.hurtSound.currentTime = 0;
+                }, 500);
+            }
         }
     }
 }

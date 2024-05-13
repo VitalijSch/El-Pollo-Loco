@@ -1,4 +1,5 @@
 class Level {
+    levelEndX = 2700;
     smallChicken;
     chicken;
     bigChicken;
@@ -6,7 +7,6 @@ class Level {
     cloud;
     coin;
     bottle;
-    levelEndX = 2700;
 
 
     constructor(background, cloud, smallChicken, chicken, bigChicken, coin, bottle) {

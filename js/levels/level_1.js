@@ -1,6 +1,10 @@
 let level1 = levelOne();
 
 
+/**
+ * Creates a Level object representing the first level of the game.
+ * @returns {Level} The Level object for the first level.
+ */
 function levelOne() {
     return new Level(
         [

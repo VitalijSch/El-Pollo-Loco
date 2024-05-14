@@ -85,6 +85,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Initializes the intervals for character actions such as movement, animation, and sound handling.
+     */
     beginCharacterActionInterval() {
         this.checkAndUpdateIdleStartTime();
         setInterval(() => {
@@ -98,7 +101,10 @@ class Character extends Movable {
         this.characterSounds();
     }
 
-
+    
+    /**
+     * Checks and updates the start time of character idle state.
+     */
     checkAndUpdateIdleStartTime() {
         if (this.y === 170) {
             this.idleStartTime = new Date().getTime();
@@ -106,6 +112,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Updates the standing animation based on the time passed since idle.
+     */
     updateStandAnimationBasedOnIdleTime() {
         this.loadImage('../assets/images/2_character_pepe/1_idle/idle/I-1.png');
         let currentTime = new Date().getTime();
@@ -113,6 +122,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles character movement actions such as right, left, jump, throw, and camera adjustment.
+     */
     handleCharacterMoves() {
         this.characterMoveRight();
         this.characterMoveLeft();
@@ -122,6 +134,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles character movement to the right.
+     */
     characterMoveRight() {
         if (this.world.keyboard.right && this.x < this.world.level.levelEndX) {
             this.moveRight();
@@ -131,6 +146,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles character movement to the left.
+     */
     characterMoveLeft() {
         if (this.world.keyboard.left && this.x > 0) {
             this.moveLeft();
@@ -140,6 +158,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles character jumping action.
+     */
     characterJump() {
         if (this.world.keyboard.space && !this.isAboveGround()) {
             this.jump();
@@ -148,6 +169,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles character throwing action.
+     */
     characterThrow() {
         if (this.world.keyboard.d) {
             this.idleStartTime = new Date().getTime();
@@ -155,6 +179,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles camera adjustment based on character position.
+     */
     handleCamera() {
         if (this.x < 2200) {
             this.world.cameraX = -this.x + 100;
@@ -164,6 +191,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles character animation based on various states such as idle, walking, jumping, etc.
+     */
     handleCharacterAnimation() {
         if (this.isDead()) {
             this.characterIsDead();
@@ -181,6 +211,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles character death animation and transition to end game screen.
+     */
     characterIsDead() {
         this.playAnimation(this.characterDeadCache);
         setTimeout(() => {
@@ -190,6 +223,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Initializes intervals for character sounds such as hurt, jump, movement, and sleeping sounds.
+     */
     characterSounds() {
         setInterval(() => {
             this.handleCharacterHurtSound();
@@ -206,6 +242,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles sound effects for character movement.
+     */
     handleCharacterMoveSounds() {
         if (this.world.keyboard.right || this.world.keyboard.left) {
             this.sounds.playSound(this.sounds.moveSound);
@@ -213,6 +252,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles sound effects for character jumping.
+     */
     handleCharacterJumpSound() {
         if (this.isAboveGround()) {
             this.sounds.playSound(this.sounds.jumpSound);
@@ -220,6 +262,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles sound effects for character sleeping.
+     */
     handleCharacterSleepingSound() {
         if (this.timepassed >= 15000) {
             this.sounds.playSound(this.sounds.longIdleSound);
@@ -227,6 +272,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles sound effects for character being hurt.
+     */
     handleCharacterHurtSound() {
         if (this.isHurt()) {
             this.sounds.playSound(this.sounds.hurtSound);
@@ -234,6 +282,9 @@ class Character extends Movable {
     }
 
 
+    /**
+     * Handles sound effects for character death.
+     */
     handleCharacterDeadSound() {
         if (this.isDead()) {
             this.sounds.playSound(this.sounds.deadSound);

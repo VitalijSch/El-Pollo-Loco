@@ -13,6 +13,11 @@ class Sounds {
     winSound = new Audio('../assets/audio/win.mp3');
 
 
+    /**
+     * Plays a sound if sound is not muted.
+     * @param {HTMLAudioElement} sound - The sound to be played.
+     * @returns {void}
+     */
     playSound(sound) {
         if (!soundMuted) {
             sound.pause();

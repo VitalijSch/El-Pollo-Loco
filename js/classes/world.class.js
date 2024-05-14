@@ -35,12 +35,20 @@ class World extends Movable {
     }
 
 
+    /**
+     * Sets the world for the character and big chicken objects.
+     * @returns {void}
+     */
     setWorld() {
         this.character.world = this;
         this.level.bigChicken.world = this;
     }
 
 
+    /**
+     * Draws the game elements onto the canvas.
+     * @returns {void}
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.renderBackgroundAndObjects();
@@ -50,6 +58,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Renders the background and various objects on the canvas.
+     * @returns {void}
+     */
     renderBackgroundAndObjects() {
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.background);
@@ -60,6 +72,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Renders the status bar on the canvas.
+     * @returns {void}
+     */
     renderStatusBar() {
         this.addToMap(this.statusHealth);
         this.addToMap(this.statusCoin);
@@ -68,6 +84,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Renders the character and other game objects on the canvas.
+     * @returns {void}
+     */
     renderCharacterAndObjects() {
         this.ctx.translate(this.cameraX, 0);
         this.addToMap(this.character);
@@ -79,22 +99,30 @@ class World extends Movable {
     }
 
 
+    /**
+     * Runs the game loop by setting intervals for various game actions.
+     * @returns {void}
+     */
     run() {
         setInterval(() => {
             this.checkCharacterEnemyCollisionsAndUpdateHealth();
-        }, 800)
+        }, 800);
         setInterval(() => {
             this.checkCollisionsJump();
             this.handleCollectibleItemsCollision();
             this.handleBottleThrowing();
-        }, 1)
+        }, 1);
         this.winInterval = setInterval(() => {
             this.handleThrowableCollisionsWithEnemies();
-            this.characterSeeBigChicken();
-        }, 100)
+            this.handleBigChickenInteractions();
+        }, 100);
     }
 
 
+    /**
+     * Checks character-enemy collisions and updates health if necessary.
+     * @returns {void}
+     */
     checkCharacterEnemyCollisionsAndUpdateHealth() {
         this.enemiesArray.forEach(enemyArray => {
             enemyArray.forEach(enemy => {
@@ -112,6 +140,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Checks collisions related to character jumping.
+     * @returns {void}
+     */
     checkCollisionsJump() {
         this.enemiesArray.forEach(enemyArray => {
             enemyArray.forEach(enemy => {
@@ -125,6 +157,12 @@ class World extends Movable {
     }
 
 
+    /**
+     * Validates the enemy object and performs actions based on its type.
+     * @param {Enemy} enemy - The enemy object to validate.
+     * @param {Enemy[]} enemyArray - The array containing enemy objects.
+     * @returns {void}
+     */
     validateEnemy(enemy, enemyArray) {
         if (enemy instanceof BigChicken) {
             return;
@@ -139,6 +177,12 @@ class World extends Movable {
     }
 
 
+    /**
+     * Removes an enemy object from its containing array.
+     * @param {Enemy[]} enemyArray - The array containing enemy objects.
+     * @param {Enemy} enemy - The enemy object to be removed.
+     * @returns {void}
+     */
     removeEnemyFromArray(enemyArray, enemy) {
         setTimeout(() => {
             let index = enemyArray.findIndex(findEnemy => findEnemy.id === enemy.id);
@@ -149,6 +193,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Handles collisions with collectible items.
+     * @returns {void}
+     */
     handleCollectibleItemsCollision() {
         this.itemsArray.forEach(itemArray => {
             itemArray.forEach((item, index) => {
@@ -164,6 +212,12 @@ class World extends Movable {
     }
 
 
+    /**
+     * Handles the collection of coins by the character.
+     * @param {number} index - The index of the collected coin in the array.
+     * @param {Coin[]} itemArray - The array containing coin objects.
+     * @returns {void}
+     */
     collectionCoin(index, itemArray) {
         if (!soundMuted) {
             this.sounds.collectCoinSound.play();
@@ -178,6 +232,12 @@ class World extends Movable {
     }
 
 
+    /**
+     * Handles the collection of bottles by the character.
+     * @param {number} index - The index of the collected bottle in the array.
+     * @param {Bottle[]} itemArray - The array containing bottle objects.
+     * @returns {void}
+     */
     collectionBottle(index, itemArray) {
         if (!soundMuted) {
             this.sounds.collectBottleSound.play();
@@ -192,6 +252,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Handles the throwing of bottles by the character.
+     * @returns {void}
+     */
     handleBottleThrowing() {
         if (this.keyboard.d && !this.isThrowing) {
             if (this.statusBottle.bottle > 0) {
@@ -201,6 +265,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Handles the process of throwing a bottle by the character.
+     * @returns {void}
+     */
     handleBottleThrowingProcess() {
         this.statusBottle.bottle -= 10;
         this.statusBottle.setStatus(this.statusBottle.bottle, this.statusBottle.statusBottleCache);
@@ -212,6 +280,11 @@ class World extends Movable {
     }
 
 
+    /**
+     * Sets up an interval for handling bottle movement and collision detection.
+     * @param {Throwable} bottle - The bottle object being thrown.
+     * @returns {void}
+     */
     handleBottleInterval(bottle) {
         let bottleInterval = setInterval(() => {
             this.adjustBottlePosition(bottle);
@@ -222,10 +295,15 @@ class World extends Movable {
                     }
                 })
             });
-        }, 1000 / 40);
+        }, 1000 / 30);
     }
 
 
+    /**
+     * Adjusts the position of the thrown bottle.
+     * @param {Throwable} bottle - The bottle object being thrown.
+     * @returns {void}
+     */
     adjustBottlePosition(bottle) {
         if (bottle.isAboveGround() && !bottle.hitEnemy) {
             if (bottle.otherDirection) {
@@ -237,10 +315,18 @@ class World extends Movable {
     }
 
 
+    /**
+     * Handles the collision between the thrown bottle and enemies.
+     * @param {Throwable} bottle - The bottle object being thrown.
+     * @param {Enemy[]} enemyArray - The array containing enemy objects.
+     * @param {Enemy} enemy - The enemy object being collided with.
+     * @param {number} bottleInterval - The interval ID for the bottle's movement.
+     * @returns {void}
+     */
     handleBottleCollision(bottle, enemyArray, enemy, bottleInterval) {
         if (bottle.isColliding(enemy)) {
             bottle.hitEnemy = true;
-            bottle.isBottleSplah = true;
+            bottle.isBottleSplash = true;
             enemy.hitEnemy = true;
             this.validateEnemy(enemy, enemyArray);
         }
@@ -252,6 +338,10 @@ class World extends Movable {
     }
 
 
+    /**
+     * Initiates the bottle throwing action.
+     * @returns {void}
+     */
     handleThrowing() {
         this.isThrowing = true;
         setTimeout(() => {
@@ -263,6 +353,10 @@ class World extends Movable {
     }
 
 
+    /**
+    * Handles collisions between thrown bottles and enemies.
+    * @returns {void}
+    */
     handleThrowableCollisionsWithEnemies() {
         this.throwable.forEach(throwingBottle => {
             this.enemiesArray.forEach(enemyArray => {
@@ -276,6 +370,13 @@ class World extends Movable {
     }
 
 
+    /**
+     * Handles the collision between a thrown bottle and an enemy.
+     * @param {Throwable} throwingBottle - The thrown bottle object.
+     * @param {Enemy[]} enemyArray - The array containing enemy objects.
+     * @param {Enemy} enemy - The enemy object being collided with.
+     * @returns {void}
+     */
     handleBottleEnemyCollision(throwingBottle, enemyArray, enemy) {
         if (throwingBottle.hitEnemy) {
             if (enemy instanceof BigChicken) {
@@ -292,7 +393,12 @@ class World extends Movable {
     }
 
 
-    characterSeeBigChicken() {
+    /**
+     * Handles interactions between the character and big chickens.
+     * Triggers appropriate animations based on the character's interaction with big chickens.
+     * @returns {void}
+     */
+    handleBigChickenInteractions() {
         this.level.bigChicken.forEach(chicken => {
             this.triggerBigChickenAlert(chicken);
             if (this.character.isColliding(chicken) && this.character.y >= 170 && chicken.hadFirstContact) {
@@ -305,10 +411,15 @@ class World extends Movable {
                 this.triggerBigChickenWalkAnimation(chicken);
             }
             this.adjustBigChickenSpeed(chicken);
-        })
+        });
     }
 
 
+    /**
+     * Triggers an alert animation for the big chicken if the character is near and it's the first contact.
+     * @param {BigChicken} chicken - The big chicken instance.
+     * @returns {void}
+     */
     triggerBigChickenAlert(chicken) {
         if (this.character.x >= 2000 && !chicken.hadFirstContact) {
             chicken.speedX = 0;
@@ -320,21 +431,37 @@ class World extends Movable {
     }
 
 
+    /**
+     * Triggers the attack animation for the big chicken.
+     * @param {BigChicken} chicken - The big chicken instance.
+     * @returns {void}
+     */
     triggerBigChickenAttackAnimation(chicken) {
         chicken.speedX = 0;
         chicken.bigChickenAttackkAnimation();
     }
 
 
+    /**
+     * Triggers the hurt animation for the big chicken.
+     * @param {BigChicken} chicken - The big chicken instance.
+     * @returns {void}
+     */
     triggerBigChickenHurtAnimation(chicken) {
         chicken.speedX = 0;
         chicken.bigChickenHurtAnimation();
         setTimeout(() => {
             chicken.hitEnemy = false;
-        }, 500)
+        }, 500);
     }
 
 
+    /**
+     * Triggers the dead animation for the big chicken.
+     * Stops background sound, plays win sound, shows win screen, and goes back to home after 3 seconds.
+     * @param {BigChicken} chicken - The big chicken instance.
+     * @returns {void}
+     */
     triggerBigChickenDeadAnimation(chicken) {
         chicken.speedX = 0;
         chicken.bigChickenDeadAnimation();
@@ -344,12 +471,16 @@ class World extends Movable {
         showYouWinScreen();
         setTimeout(() => {
             this.clearAllIntervals();
-            // this.sounds.mutedSounds();
             backToHome();
         }, 3000);
     }
 
 
+    /**
+     * Triggers the walk animation for the big chicken based on its movement direction.
+     * @param {BigChicken} chicken - The big chicken instance.
+     * @returns {void}
+     */
     triggerBigChickenWalkAnimation(chicken) {
         if (this.character.x > chicken.x) {
             chicken.otherDirection = true;
@@ -360,55 +491,5 @@ class World extends Movable {
         }
         chicken.speedX = 10;
         chicken.bigChickenWalkAnimation();
-    }
-
-
-    adjustBigChickenSpeed(chicken) {
-        if (isPausedGame) {
-            chicken.speedX = 0;
-        } else {
-            chicken.speedX = 10;
-        }
-    }
-
-
-    addObjectsToMap(object) {
-        object.forEach(obj => {
-            this.addToMap(obj);
-        })
-    }
-
-
-    addToMap(mo) {
-        if (mo.otherDirection) {
-            this.flipImage(mo);
-        }
-        mo.draw(this.ctx);
-        if (mo.otherDirection) {
-            this.flipImageBack(mo);
-        }
-    }
-
-
-    flipImage(mo) {
-        this.ctx.save();
-        this.ctx.translate(mo.width, 0);
-        this.ctx.scale(-1, 1);
-        mo.x = mo.x * -1;
-    }
-
-
-    flipImageBack(mo) {
-        mo.x = mo.x * -1;
-        this.ctx.restore();
-    }
-
-
-    pauseAnimation() {
-        cancelAnimationFrame(this.animationFrameId);
-    }
-
-    resumeAnimation() {
-        this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
 }

@@ -57,7 +57,11 @@ class BigChicken extends Movable {
         this.offset.bottom = 60;
     }
 
-
+    
+    /**
+     * Initiates the animation for big chicken alert, accompanied by sound effects.
+     * @returns {void}
+     */
     bigChickenAlertAnimation() {
         if (!soundMuted) {
             this.sounds.bigChickenSound.play();
@@ -70,16 +74,28 @@ class BigChicken extends Movable {
     }
 
 
+    /**
+     * Initiates the animation for big chicken walking.
+     * @returns {void}
+     */
     bigChickenWalkAnimation() {
         this.playAnimation(this.bigChickenWalkCache);
     }
 
 
+    /**
+     * Initiates the animation for big chicken attacking.
+     * @returns {void}
+     */
     bigChickenAttackkAnimation() {
         this.playAnimation(this.bigChickenAttackCache);
     }
 
 
+    /**
+     * Initiates the animation for big chicken being hurt, accompanied by sound effects.
+     * @returns {void}
+     */
     bigChickenHurtAnimation() {
         if (!soundMuted) {
             this.sounds.bigChickenSound.play();
@@ -92,6 +108,10 @@ class BigChicken extends Movable {
     }
 
 
+    /**
+     * Initiates the animation for big chicken being dead.
+     * @returns {void}
+     */
     bigChickenDeadAnimation() {
         this.playAnimation(this.bigChickenDeadCache);
     }

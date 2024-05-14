@@ -10,6 +10,13 @@ class Cloud extends Movable {
     }
 
 
+    /**
+     * Moves the clouds continuously to the left.
+     * @memberof Clouds
+     * @function moveCloudsLeft
+     * @instance
+     * @returns {void}
+     */
     moveCloudsLeft() {
         setInterval(() => {
             this.moveLeft();

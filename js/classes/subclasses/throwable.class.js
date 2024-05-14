@@ -31,20 +31,28 @@ class Throwable extends Movable {
     }
 
 
+    /**
+     * Initiates a throw action by setting the object's vertical speed and applying gravity.
+     * @returns {void}
+     */
     throw() {
         this.speedY = 30;
         this.applyGravity();
     }
 
 
+    /**
+     * Initiates the animation for a throw action, alternating between bottle splash and rotation animations.
+     * @returns {void}
+     */
     throwAnimation() {
         setInterval(() => {
-            if (this.isBottleSplah) {
+            if (this.isBottleSplash) {
                 this.playAnimation(this.bottleSplashCache);
                 this.isBottleSplash = false;
             } else {
                 this.playAnimation(this.bottleRotationCache);
             }
-        }, 100)
+        }, 100);
     }
 }

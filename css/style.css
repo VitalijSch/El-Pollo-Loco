@@ -315,6 +315,13 @@ h2 {
     padding-bottom: 5px;
 }
 
+#youWin {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
 .d-none {
     display: none;
 }

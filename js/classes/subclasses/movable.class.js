@@ -1,4 +1,5 @@
 class Movable extends Drawable {
+    intervalArray = [];
     offset = {
         top: 0,
         left: 0,
@@ -102,5 +103,10 @@ class Movable extends Drawable {
                 this.playAnimation(enemyWalk);
             }
         }, 200);
+    }
+
+
+    clearAllIntervals() {
+        for (let i = 1; i < 9999; i++) window.clearInterval(i);
     }
 }

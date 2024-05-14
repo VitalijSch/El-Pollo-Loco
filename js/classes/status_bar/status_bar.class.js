@@ -13,23 +13,23 @@ class StatusBar extends Movable {
 
 
     resolvePercentage(bar) {
-        if (bar === 100) {
-            return 5;
-        }
-        if (bar === 90 || bar === 80 || bar === 70) {
-            return 4;
-        }
-        if (bar === 60 || bar >= 50) {
-            return 3;
-        }
-        if (bar === 40 || bar >= 30) {
-            return 2;
-        }
-        if (bar === 20 || bar >= 10) {
-            return 1;
-        }
         if (bar === 0) {
             return 0;
+        }
+        if (bar >= 1 && bar <= 20) {
+            return 1;
+        }
+        if (bar >= 30 && bar <= 40) {
+            return 2;
+        }
+        if (bar >= 50 && bar <= 60) {
+            return 3;
+        }
+        if (bar >= 70 && bar <= 90) {
+            return 4;
+        }
+        if (bar === 100) {
+            return 5;
         }
     }
 }

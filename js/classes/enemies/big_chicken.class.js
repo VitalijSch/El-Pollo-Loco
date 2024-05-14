@@ -64,7 +64,7 @@ class BigChicken extends Movable {
             setTimeout(() => {
                 this.sounds.bigChickenSound.pause();
                 this.sounds.bigChickenSound.currentTime = 0;
-            }, 2000);
+            }, 1500);
         }
         this.playAnimation(this.bigChickenAlertCache);
     }
@@ -86,7 +86,7 @@ class BigChicken extends Movable {
             setTimeout(() => {
                 this.sounds.bigChickenSound.pause();
                 this.sounds.bigChickenSound.currentTime = 0;
-            }, 2000);
+            }, 1500);
         }
         this.playAnimation(this.bigChickenHurtCache);
     }

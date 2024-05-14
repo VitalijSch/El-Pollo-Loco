@@ -20,17 +20,6 @@ async function init() {
 }
 
 
-function touchMoves() {
-    let moveLeft = document.getElementById('moveLeft');
-    let moveRight = document.getElementById('moveRight');
-    let jumpHigh = document.getElementById('jumpHigh');
-    let throwBottle = document.getElementById('throwBottle');
-    movesStart(moveLeft, moveRight, jumpHigh, throwBottle);
-    movesEnd(moveLeft, moveRight, jumpHigh, throwBottle);
-
-}
-
-
 async function loadScripts(scriptFiles) {
     for (let i = 0; i < scriptFiles.length; i++) {
         const src = scriptFiles[i];
@@ -54,7 +43,21 @@ function showCanvas() {
     content.classList.add('d-none');
     canvas.classList.remove('d-none');
     fullscreen.style = '';
+    backgroundSound.pause();
+    backgroundSound.currentTime = 0;
     backgroundSound.play();
+    backgroundSound.volume = 0.50;
+}
+
+
+function touchMoves() {
+    let moveLeft = document.getElementById('moveLeft');
+    let moveRight = document.getElementById('moveRight');
+    let jumpHigh = document.getElementById('jumpHigh');
+    let throwBottle = document.getElementById('throwBottle');
+    movesStart(moveLeft, moveRight, jumpHigh, throwBottle);
+    movesEnd(moveLeft, moveRight, jumpHigh, throwBottle);
+
 }
 
 
@@ -153,14 +156,18 @@ function removeScripts() {
 }
 
 
-function openEndGameScreen(id) {
+function showYouWinScreen() {
+    let youWin = document.getElementById('youWin');
+    youWin.classList.toggle('d-none');
+}
+
+
+function openEndGameScreen() {
     canvas = document.getElementById('canvas');
-    let endScreen = document.getElementById(id);
     let fullscreen = document.getElementById('fullscreen');
     document.querySelector('.pause').classList.add('d-none');
     document.querySelector('.pause-screen-container').classList.add('d-none');
     canvas.classList.add('d-none');
-    endScreen.classList.toggle('d-none');
     fullscreen.style.display = 'none';
     showContentContainer();
     backgroundSound.pause();
@@ -188,10 +195,8 @@ function togglePauseScreen() {
     isPausedGame = !isPausedGame;
     if (isPausedGame) {
         world.pauseAnimation();
-        world.character.pauseCharacterInterval();
     } else {
         world.resumeAnimation();
-        world.character.characterAnimation();
     }
 }
 
@@ -208,7 +213,6 @@ function toggleMutedSound() {
     soundMuted = !soundMuted;
     if (soundMuted) {
         backgroundSound.pause();
-        backgroundSound.currentTime = 0;
     } else {
         backgroundSound.play();
     }

@@ -341,11 +341,12 @@ class World extends Movable {
         backgroundSound.pause();
         backgroundSound.currentTime = 0;
         this.sounds.winSound.play();
+        showYouWinScreen();
         setTimeout(() => {
-            clearInterval(this.winInterval)
-            this.sounds.mutedSounds();
-            openEndGameScreen('youWin');
-        }, 1000);
+            this.clearAllIntervals();
+            // this.sounds.mutedSounds();
+            backToHome();
+        }, 3000);
     }
 
 

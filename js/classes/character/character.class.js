@@ -1,57 +1,57 @@
 class Character extends Movable {
     characterWalkCache = [
-        '../assets/images/2_character_pepe/2_walk/W-21.png',
-        '../assets/images/2_character_pepe/2_walk/W-22.png',
-        '../assets/images/2_character_pepe/2_walk/W-23.png',
-        '../assets/images/2_character_pepe/2_walk/W-24.png',
-        '../assets/images/2_character_pepe/2_walk/W-25.png',
-        '../assets/images/2_character_pepe/2_walk/W-26.png',
+        './assets/images/2_character_pepe/2_walk/W-21.png',
+        './assets/images/2_character_pepe/2_walk/W-22.png',
+        './assets/images/2_character_pepe/2_walk/W-23.png',
+        './assets/images/2_character_pepe/2_walk/W-24.png',
+        './assets/images/2_character_pepe/2_walk/W-25.png',
+        './assets/images/2_character_pepe/2_walk/W-26.png',
     ];
     characterJumpCache = [
-        '../assets/images/2_character_pepe/3_jump/J-33.png',
-        '../assets/images/2_character_pepe/3_jump/J-34.png',
-        '../assets/images/2_character_pepe/3_jump/J-35.png',
-        '../assets/images/2_character_pepe/3_jump/J-36.png',
-        '../assets/images/2_character_pepe/3_jump/J-37.png',
-        '../assets/images/2_character_pepe/3_jump/J-38.png',
+        './assets/images/2_character_pepe/3_jump/J-33.png',
+        './assets/images/2_character_pepe/3_jump/J-34.png',
+        './assets/images/2_character_pepe/3_jump/J-35.png',
+        './assets/images/2_character_pepe/3_jump/J-36.png',
+        './assets/images/2_character_pepe/3_jump/J-37.png',
+        './assets/images/2_character_pepe/3_jump/J-38.png',
     ];
     characterHurtCache = [
-        '../assets/images/2_character_pepe/4_hurt/H-41.png',
-        '../assets/images/2_character_pepe/4_hurt/H-42.png',
-        '../assets/images/2_character_pepe/4_hurt/H-43.png',
+        './assets/images/2_character_pepe/4_hurt/H-41.png',
+        './assets/images/2_character_pepe/4_hurt/H-42.png',
+        './assets/images/2_character_pepe/4_hurt/H-43.png',
     ];
     characterDeadCache = [
-        '../assets/images/2_character_pepe/5_dead/D-51.png',
-        '../assets/images/2_character_pepe/5_dead/D-52.png',
-        '../assets/images/2_character_pepe/5_dead/D-53.png',
-        '../assets/images/2_character_pepe/5_dead/D-54.png',
-        '../assets/images/2_character_pepe/5_dead/D-55.png',
-        '../assets/images/2_character_pepe/5_dead/D-56.png',
-        '../assets/images/2_character_pepe/5_dead/D-57.png',
+        './assets/images/2_character_pepe/5_dead/D-51.png',
+        './assets/images/2_character_pepe/5_dead/D-52.png',
+        './assets/images/2_character_pepe/5_dead/D-53.png',
+        './assets/images/2_character_pepe/5_dead/D-54.png',
+        './assets/images/2_character_pepe/5_dead/D-55.png',
+        './assets/images/2_character_pepe/5_dead/D-56.png',
+        './assets/images/2_character_pepe/5_dead/D-57.png',
     ];
     characterIdleCache = [
-        '../assets/images/2_character_pepe/1_idle/idle/I-1.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-2.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-3.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-4.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-5.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-6.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-7.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-8.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-9.png',
-        '../assets/images/2_character_pepe/1_idle/idle/I-10.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-1.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-2.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-3.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-4.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-5.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-6.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-7.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-8.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-9.png',
+        './assets/images/2_character_pepe/1_idle/idle/I-10.png',
     ];
     characterLongIdleCache = [
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-11.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-12.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-13.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-14.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-15.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-16.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-17.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-18.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-19.png',
-        '../assets/images/2_character_pepe/1_idle/long_idle/I-20.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-11.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-12.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-13.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-14.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-15.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-16.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-17.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-18.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-19.png',
+        './assets/images/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
     idleStartTime;
     timepassed;
@@ -75,7 +75,7 @@ class Character extends Movable {
 
 
     loadAllImages() {
-        this.loadImage('../assets/images/2_character_pepe/2_walk/W-21.png');
+        this.loadImage('./assets/images/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.characterWalkCache);
         this.loadImages(this.characterJumpCache);
         this.loadImages(this.characterHurtCache);
@@ -101,7 +101,7 @@ class Character extends Movable {
         this.characterSounds();
     }
 
-    
+
     /**
      * Checks and updates the start time of character idle state.
      */
@@ -116,7 +116,7 @@ class Character extends Movable {
      * Updates the standing animation based on the time passed since idle.
      */
     updateStandAnimationBasedOnIdleTime() {
-        this.loadImage('../assets/images/2_character_pepe/1_idle/idle/I-1.png');
+        this.loadImage('./assets/images/2_character_pepe/1_idle/idle/I-1.png');
         let currentTime = new Date().getTime();
         this.timepassed = currentTime - this.idleStartTime;
     }
@@ -232,7 +232,7 @@ class Character extends Movable {
         }, 500);
         setInterval(() => {
             this.handleCharacterJumpSound();
-        }, 900);
+        }, 600);
         setInterval(() => {
             this.handleCharacterMoveSounds();
         }, 300);
@@ -247,7 +247,7 @@ class Character extends Movable {
      */
     handleCharacterMoveSounds() {
         if (this.world.keyboard.right || this.world.keyboard.left) {
-            this.sounds.playSound(this.sounds.moveSound);
+            this.sounds.playAudio(this.sounds.moveSound);
         }
     }
 
@@ -257,7 +257,7 @@ class Character extends Movable {
      */
     handleCharacterJumpSound() {
         if (this.isAboveGround()) {
-            this.sounds.playSound(this.sounds.jumpSound);
+            this.sounds.playAudio(this.sounds.jumpSound);
         }
     }
 
@@ -267,7 +267,7 @@ class Character extends Movable {
      */
     handleCharacterSleepingSound() {
         if (this.timepassed >= 15000) {
-            this.sounds.playSound(this.sounds.longIdleSound);
+            this.sounds.playAudio(this.sounds.longIdleSound);
         }
     }
 
@@ -277,7 +277,7 @@ class Character extends Movable {
      */
     handleCharacterHurtSound() {
         if (this.isHurt()) {
-            this.sounds.playSound(this.sounds.hurtSound);
+            this.sounds.playAudio(this.sounds.hurtSound);
         }
     }
 
@@ -287,7 +287,7 @@ class Character extends Movable {
      */
     handleCharacterDeadSound() {
         if (this.isDead()) {
-            this.sounds.playSound(this.sounds.deadSound);
+            this.sounds.playAudio(this.sounds.deadSound);
         }
     }
 }

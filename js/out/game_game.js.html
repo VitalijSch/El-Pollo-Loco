@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: game/game.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: game/game.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let scriptsLoaded = false;
+let soundMuted = false;
+let isPausedGame = false;
+let keyboard;
+let canvas;
+let world;
+let sounds = new Sounds();
+
+
+/**
+ * Initializes the game by loading scripts, showing the canvas, and setting up the world if necessary.
+ * @returns {void}
+ */
+async function init() {
+    if (!scriptsLoaded) {
+        await loadScripts(scriptFiles);
+    }
+    showCanvas();
+    if (!world) {
+        keyboard = new Keyboard();
+        world = new World(canvas, keyboard);
+    }
+}
+
+
+/**
+ * Loads scripts dynamically.
+ * @param {string[]} scriptFiles - An array of script file paths to load.
+ * @returns {Promise&lt;void>}
+ */
+async function loadScripts(scriptFiles) {
+    for (let i = 0; i &lt; scriptFiles.length; i++) {
+        const src = scriptFiles[i];
+        await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    }
+    scriptsLoaded = true;
+}
+
+
+/**
+ * Shows the game canvas and starts background music.
+ * @returns {void}
+ */
+function showCanvas() {
+    canvas = document.getElementById('canvas');
+    let content = document.querySelector('.content');
+    let fullscreen = document.getElementById('fullscreen');
+    document.querySelector('.pause').classList.remove('d-none');
+    content.classList.add('d-none');
+    canvas.classList.remove('d-none');
+    fullscreen.style = '';
+    sounds.playSound(sounds.backgroundSound);
+    sounds.backgroundSound.volume = 0.50;
+}
+
+
+/**
+ * Displays an information container with the specified ID and hides other elements.
+ * @param {string} id - The ID of the container to be displayed.
+ * @returns {void}
+ */
+function showInformationContainer(id) {
+    let background = document.getElementById('background');
+    let arrowBack = document.querySelector('.arrow-back');
+    let headerContainer = document.querySelector('.header-container');
+    let storyContainer = document.querySelector('.story-container');
+    let container = document.getElementById(id);
+    background.src = './assets/images/5_background/first_half_background.png';
+    arrowBack.classList.remove('d-none');
+    headerContainer.classList.add('d-none');
+    storyContainer.classList.remove('d-none');
+    container.classList.remove('d-none');
+}
+
+
+/**
+ * Closes the information container and resets related elements to their initial state.
+ * @returns {void}
+ */
+function closeInformationContainer() {
+    let background = document.getElementById('background');
+    let arrowBack = document.querySelector('.arrow-back');
+    let headerContainer = document.querySelector('.header-container');
+    let storyContainer = document.querySelector('.story-container');
+    let informationContainer = document.querySelectorAll('.close-information');
+    background.src = './assets/images/9_intro_outro_screens/start/startscreen_2.png';
+    arrowBack.classList.add('d-none');
+    headerContainer.classList.remove('d-none');
+    storyContainer.classList.add('d-none');
+    informationContainer.forEach(container => container.classList.add('d-none'));
+}
+
+
+/**
+ * Reloads the window to navigate back to the home page.
+ * @returns {void}
+ */
+function backToHome() {
+    window.location.reload();
+}
+
+
+/**
+ * Starts a new game by resetting the game state, removing any dynamically loaded scripts,
+ * initializing the first level, and starting the game.
+ */
+function playAgain() {
+    resetGame();
+    removeScripts();
+    level1 = levelOne();
+    init();
+}
+
+
+/**
+ * Resets the game state by clearing relevant variables.
+ * @returns {void}
+ */
+function resetGame() {
+    keyboard = null;
+    canvas = null;
+    world.pauseAnimation();
+    world.clearAllIntervals();
+    world = null;
+    level1 = null;
+}
+
+
+/**
+ * Removes all script elements from the document.
+ * @returns {void}
+ */
+function removeScripts() {
+    const scripts = document.querySelectorAll('script');
+    scripts.forEach(script => {
+        if (script.parentNode) {
+            script.parentNode.removeChild(script);
+        }
+    });
+}
+
+
+/**
+ * Toggles the visibility of the "You Win" screen element.
+ * @returns {void}
+ */
+function showYouWinScreen() {
+    let youWin = document.getElementById('youWin');
+    youWin.classList.toggle('d-none');
+}
+
+
+/**
+ * Opens the end game screen, hides pause elements, and displays content container.
+ * @returns {void}
+ */
+function openEndGameScreen() {
+    canvas = document.getElementById('canvas');
+    let fullscreen = document.getElementById('fullscreen');
+    document.querySelector('.pause').classList.add('d-none');
+    document.querySelector('.pause-screen-container').classList.add('d-none');
+    canvas.classList.add('d-none');
+    fullscreen.style.display = 'none';
+    showContentContainer();
+    sounds.backgroundSound.pause();
+    sounds.backgroundSound.currentTime = 0;
+}
+
+
+/**
+ * Shows the content container and hides other elements.
+ * @returns {void}
+ */
+function showContentContainer() {
+    let content = document.querySelector('.content');
+    let background = document.getElementById('background');
+    let headerContainer = document.querySelector('.header-container');
+    let endScreenContainer = document.querySelector('.end-screen-container');
+    content.classList.remove('d-none');
+    background.src = './assets/images/5_background/first_half_background.png';
+    headerContainer.classList.add('d-none');
+    endScreenContainer.classList.remove('d-none');
+}
+
+
+/**
+ * Toggles the visibility of the pause screen and its container, and adjusts game state accordingly.
+ * @returns {void}
+ */
+function togglePauseScreen() {
+    document.querySelector('.pause').classList.toggle('d-none');
+    document.querySelector('.pause-screen-container').classList.toggle('d-none');
+    document.getElementById('pauseScreenController').style.display = 'none';
+    document.querySelector('.pause-screen-icons').style.display = '';
+    isPausedGame = !isPausedGame;
+    if (isPausedGame) {
+        world.pauseAnimation();
+    } else {
+        world.resumeAnimation();
+    }
+}
+
+
+/**
+ * Toggles the visibility of the controller information.
+ * @returns {void}
+ */
+function toggleControllerInformation() {
+    document.getElementById('pauseScreenController').style.display = '';
+    document.querySelector('.pause-screen-icons').style.display = 'none';
+}
+
+
+/**
+ * Toggles the mute state of the background sound.
+ * @returns {void}
+ */
+function toggleMutedSound() {
+    let soundOn = document.getElementById('soundOn');
+    let soundOff = document.getElementById('soundOff');
+    soundMuted = !soundMuted;
+    if (soundMuted) {
+        sounds.backgroundSound.pause();
+    } else {
+        sounds.playSound(sounds.backgroundSound);
+    }
+    soundOn.classList.toggle('d-none');
+    soundOff.classList.toggle('d-none');
+}
+
+
+/**
+ * Funktion, um das angegebene Element in den Vollbildmodus zu versetzen.
+ * 
+ * @param {HTMLElement} element - Das HTMLElement, das in den Vollbildmodus versetzt werden soll.
+ * @returns {void}
+ */
+function fullscreen() {
+    let fullscreen = document.getElementById('fullscreen');
+    enterFullscreen(fullscreen);
+}
+
+
+/**
+ * Requests fullscreen mode for the specified element and toggles fullscreen state.
+ * @param {HTMLElement} element - The element to request fullscreen for.
+ * @returns {void}
+ */
+function enterFullscreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    }
+    toggleFullscreen();
+    togglePauseScreen();
+}
+
+
+/**
+ * Closes fullscreen mode and toggles fullscreen state.
+ * @returns {void}
+ */
+function closeFullscreen() {
+    exitFullscreen();
+    togglePauseScreen();
+    toggleFullscreen();
+}
+
+
+/**
+ * Exits fullscreen mode if the browser supports it.
+ * @returns {void}
+ */
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
+}
+
+
+/**
+ * Toggles the visibility of the fullscreen control buttons.
+ * @returns {void}
+ */
+function toggleFullscreen() {
+    document.getElementById('enterFullscreen').classList.toggle('d-none');
+    document.getElementById('exitFullscreen').classList.toggle('d-none');
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#backToHome">backToHome</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#closeInformationContainer">closeInformationContainer</a></li><li><a href="global.html#enterFullscreen">enterFullscreen</a></li><li><a href="global.html#exitFullscreen">exitFullscreen</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#levelOne">levelOne</a></li><li><a href="global.html#loadScripts">loadScripts</a></li><li><a href="global.html#openEndGameScreen">openEndGameScreen</a></li><li><a href="global.html#playAgain">playAgain</a></li><li><a href="global.html#removeScripts">removeScripts</a></li><li><a href="global.html#resetGame">resetGame</a></li><li><a href="global.html#showCanvas">showCanvas</a></li><li><a href="global.html#showContentContainer">showContentContainer</a></li><li><a href="global.html#showInformationContainer">showInformationContainer</a></li><li><a href="global.html#showYouWinScreen">showYouWinScreen</a></li><li><a href="global.html#toggleControllerInformation">toggleControllerInformation</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleMutedSound">toggleMutedSound</a></li><li><a href="global.html#togglePauseScreen">togglePauseScreen</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Thu May 16 2024 08:55:56 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

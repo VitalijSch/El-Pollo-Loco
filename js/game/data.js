@@ -1,7 +1,6 @@
 const scriptFiles = [
     './js/classes/subclasses/drawable.class.js',
     './js/classes/subclasses/movable.class.js',
-    './js/classes/subclasses/sounds.class.js',
     './js/classes/world.class.js',
     './js/classes/status_bar/status_bar.class.js',
     './js/classes/status_bar/status_health.class.js',
@@ -16,7 +15,7 @@ const scriptFiles = [
     './js/classes/character/character.class.js',
     './js/classes/enemies/small_chicken.class.js',
     './js/classes/enemies/chicken.class.js',
-    './js/classes/enemies/big_Chicken.class.js',
+    './js/classes/enemies/big_chicken.class.js',
     './js/classes/level/level.class.js',
     './js/classes/keyboard/keyboard.class.js',
     './js/levels/level_1.js'

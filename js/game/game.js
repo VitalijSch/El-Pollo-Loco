@@ -1,10 +1,10 @@
-let backgroundSound = new Audio('../assets/audio/background.mp3');
 let scriptsLoaded = false;
 let soundMuted = false;
 let isPausedGame = false;
 let keyboard;
 let canvas;
 let world;
+let sounds = new Sounds();
 
 
 /**
@@ -20,7 +20,6 @@ async function init() {
         keyboard = new Keyboard();
         world = new World(canvas, keyboard);
     }
-    touchMoves();
 }
 
 
@@ -56,76 +55,7 @@ function showCanvas() {
     content.classList.add('d-none');
     canvas.classList.remove('d-none');
     fullscreen.style = '';
-    backgroundSound.pause();
-    backgroundSound.currentTime = 0;
-    backgroundSound.play();
-    backgroundSound.volume = 0.50;
-}
-
-
-/**
- * Sets up touch event listeners for controlling game movements.
- * @returns {void}
- */
-function touchMoves() {
-    let moveLeft = document.getElementById('moveLeft');
-    let moveRight = document.getElementById('moveRight');
-    let jumpHigh = document.getElementById('jumpHigh');
-    let throwBottle = document.getElementById('throwBottle');
-    movesStart(moveLeft, moveRight, jumpHigh, throwBottle);
-    movesEnd(moveLeft, moveRight, jumpHigh, throwBottle);
-}
-
-
-/**
- * Sets up touch start event listeners for initiating movements.
- * @param {HTMLElement} moveLeft - The DOM element for moving left.
- * @param {HTMLElement} moveRight - The DOM element for moving right.
- * @param {HTMLElement} jumpHigh - The DOM element for jumping high.
- * @param {HTMLElement} throwBottle - The DOM element for throwing a bottle.
- * @returns {void}
- */
-function movesStart(moveLeft, moveRight, jumpHigh, throwBottle) {
-    moveLeft.addEventListener('touchstart', () => {
-        world.keyboard.left = true;
-    });
-
-    moveRight.addEventListener('touchstart', () => {
-        world.keyboard.right = true;
-    });
-
-    jumpHigh.addEventListener('touchstart', () => {
-        world.keyboard.space = true;
-    });
-    throwBottle.addEventListener('touchstart', () => {
-        world.keyboard.d = true;
-    });
-}
-
-
-/**
- * Sets up touch end event listeners for stopping movements.
- * @param {HTMLElement} moveLeft - The DOM element for moving left.
- * @param {HTMLElement} moveRight - The DOM element for moving right.
- * @param {HTMLElement} jumpHigh - The DOM element for jumping high.
- * @param {HTMLElement} throwBottle - The DOM element for throwing a bottle.
- * @returns {void}
- */
-function movesEnd(moveLeft, moveRight, jumpHigh, throwBottle) {
-    moveLeft.addEventListener('touchend', () => {
-        world.keyboard.left = false;
-    });
-
-    moveRight.addEventListener('touchend', () => {
-        world.keyboard.right = false;
-    });
-
-    jumpHigh.addEventListener('touchend', () => {
-        world.keyboard.space = false;
-    });
-    throwBottle.addEventListener('touchend', () => {
-        world.keyboard.d = false;
-    });
+    sounds.playAudio(sounds.backgroundSound);
 }
 
 
@@ -140,7 +70,7 @@ function showInformationContainer(id) {
     let headerContainer = document.querySelector('.header-container');
     let storyContainer = document.querySelector('.story-container');
     let container = document.getElementById(id);
-    background.src = '../assets/images/5_background/first_half_background.png';
+    background.src = './assets/images/5_background/first_half_background.png';
     arrowBack.classList.remove('d-none');
     headerContainer.classList.add('d-none');
     storyContainer.classList.remove('d-none');
@@ -158,7 +88,7 @@ function closeInformationContainer() {
     let headerContainer = document.querySelector('.header-container');
     let storyContainer = document.querySelector('.story-container');
     let informationContainer = document.querySelectorAll('.close-information');
-    background.src = '../assets/images/9_intro_outro_screens/start/startscreen_2.png';
+    background.src = './assets/images/9_intro_outro_screens/start/startscreen_2.png';
     arrowBack.classList.add('d-none');
     headerContainer.classList.remove('d-none');
     storyContainer.classList.add('d-none');
@@ -176,12 +106,26 @@ function backToHome() {
 
 
 /**
+ * Starts a new game by resetting the game state, removing any dynamically loaded scripts,
+ * initializing the first level, and starting the game.
+ */
+function playAgain() {
+    resetGame();
+    removeScripts();
+    level1 = levelOne();
+    init();
+}
+
+
+/**
  * Resets the game state by clearing relevant variables.
  * @returns {void}
  */
 function resetGame() {
     keyboard = null;
     canvas = null;
+    world.pauseAnimation();
+    world.clearAllIntervals();
     world = null;
     level1 = null;
 }
@@ -223,8 +167,7 @@ function openEndGameScreen() {
     canvas.classList.add('d-none');
     fullscreen.style.display = 'none';
     showContentContainer();
-    backgroundSound.pause();
-    backgroundSound.currentTime = 0;
+    sounds.playAudio(sounds.backgroundSound);
 }
 
 
@@ -238,7 +181,7 @@ function showContentContainer() {
     let headerContainer = document.querySelector('.header-container');
     let endScreenContainer = document.querySelector('.end-screen-container');
     content.classList.remove('d-none');
-    background.src = '../assets/images/5_background/first_half_background.png';
+    background.src = './assets/images/5_background/first_half_background.png';
     headerContainer.classList.add('d-none');
     endScreenContainer.classList.remove('d-none');
 }
@@ -281,12 +224,24 @@ function toggleMutedSound() {
     let soundOff = document.getElementById('soundOff');
     soundMuted = !soundMuted;
     if (soundMuted) {
-        backgroundSound.pause();
+        sounds.backgroundSound.pause();
     } else {
-        backgroundSound.play();
+        sounds.playAudio(sounds.backgroundSound);
     }
     soundOn.classList.toggle('d-none');
     soundOff.classList.toggle('d-none');
+}
+
+
+/**
+ * Funktion, um das angegebene Element in den Vollbildmodus zu versetzen.
+ * 
+ * @param {HTMLElement} element - Das HTMLElement, das in den Vollbildmodus versetzt werden soll.
+ * @returns {void}
+ */
+function fullscreen() {
+    let fullscreen = document.getElementById('fullscreen');
+    enterFullscreen(fullscreen);
 }
 
 
@@ -295,7 +250,7 @@ function toggleMutedSound() {
  * @param {HTMLElement} element - The element to request fullscreen for.
  * @returns {void}
  */
-function fullscreen(element) {
+function enterFullscreen(element) {
     if (element.requestFullscreen) {
         element.requestFullscreen();
     } else if (element.msRequestFullscreen) {
@@ -340,57 +295,3 @@ function toggleFullscreen() {
     document.getElementById('enterFullscreen').classList.toggle('d-none');
     document.getElementById('exitFullscreen').classList.toggle('d-none');
 }
-
-
-/**
- * Event listener for keyboard keydown events to handle user input.
- * @param {KeyboardEvent} event - The keydown event object.
- * @returns {void}
- */
-document.addEventListener('keydown', (event) => {
-    if (event.code === 'ArrowLeft') {
-        keyboard.left = true;
-    }
-    if (event.code === 'ArrowRight') {
-        keyboard.right = true;
-    }
-    if (event.code === 'ArrowUp') {
-        keyboard.up = true;
-    }
-    if (event.code === 'ArrowDown') {
-        keyboard.down = true;
-    }
-    if (event.code === 'Space') {
-        keyboard.space = true;
-    }
-    if (event.code === 'KeyD') {
-        keyboard.d = true;
-    }
-});
-
-
-/**
- * Event listener for keyboard keyup events to handle user input.
- * @param {KeyboardEvent} event - The keyup event object.
- * @returns {void}
- */
-document.addEventListener('keyup', (event) => {
-    if (event.code === 'ArrowLeft') {
-        keyboard.left = false;
-    }
-    if (event.code === 'ArrowRight') {
-        keyboard.right = false;
-    }
-    if (event.code === 'ArrowUp') {
-        keyboard.up = false;
-    }
-    if (event.code === 'ArrowDown') {
-        keyboard.down = false;
-    }
-    if (event.code === 'Space') {
-        keyboard.space = false;
-    }
-    if (event.code === 'KeyD') {
-        keyboard.d = false;
-    }
-});

@@ -167,9 +167,7 @@ class World extends Movable {
         if (enemy instanceof BigChicken) {
             return;
         } else {
-            if (!soundMuted) {
-                this.sounds.chickenSound.play();
-            }
+            this.sounds.playAudio(this.sounds.chickenSound);
             enemy.speedX = 0;
             enemy.isEnemyDead = true;
             this.removeEnemyFromArray(enemyArray, enemy);
@@ -219,13 +217,7 @@ class World extends Movable {
      * @returns {void}
      */
     collectionCoin(index, itemArray) {
-        if (!soundMuted) {
-            this.sounds.collectCoinSound.play();
-            setTimeout(() => {
-                this.sounds.collectCoinSound.pause();
-                this.sounds.collectCoinSound.currentTime = 0;
-            }, 500);
-        }
+        this.sounds.playAudio(this.sounds.collectCoinSound);
         this.statusCoin.coin += 10;
         this.statusCoin.setStatus(this.statusCoin.coin, this.statusCoin.statusCoinCache);
         itemArray.splice(index, 1);
@@ -239,13 +231,7 @@ class World extends Movable {
      * @returns {void}
      */
     collectionBottle(index, itemArray) {
-        if (!soundMuted) {
-            this.sounds.collectBottleSound.play();
-            setTimeout(() => {
-                this.sounds.collectBottleSound.pause();
-                this.sounds.collectBottleSound.currentTime = 0;
-            }, 500);
-        }
+        this.sounds.playAudio(this.sounds.collectBottleSound);
         this.statusBottle.bottle += 10;
         this.statusBottle.setStatus(this.statusBottle.bottle, this.statusBottle.statusBottleCache);
         itemArray.splice(index, 1);
@@ -259,6 +245,7 @@ class World extends Movable {
     handleBottleThrowing() {
         if (this.keyboard.d && !this.isThrowing) {
             if (this.statusBottle.bottle > 0) {
+                this.sounds.playAudio(this.sounds.bottleThrowSound);
                 this.handleBottleThrowingProcess();
             }
         }
@@ -330,9 +317,41 @@ class World extends Movable {
             enemy.hitEnemy = true;
             this.validateEnemy(enemy, enemyArray);
         }
-        if (bottle.hitEnemy || !bottle.isAboveGround()) {
+        this.handleBottleEnemyContact(bottle, bottleInterval);
+        this.handleBottleGroundImpact(bottle, bottleInterval);
+    }
+
+
+    /**
+     * Handles the impact of the bottle with an enemy.
+     * Stops the bottle's vertical movement and clears an interval if necessary.
+     * 
+     * @param {Bottle} bottle - The bottle object that collided with the enemy.
+     * @param {number} bottleInterval - The interval ID that updates the bottle's movement (if applicable).
+     */
+    handleBottleEnemyContact(bottle, bottleInterval) {
+        if (bottle.hitEnemy) {
             bottle.speedY = 0;
-            bottle.accelaration = 0;
+            bottle.acceleration = 0;
+            clearInterval(bottleInterval);
+        }
+    }
+
+
+    /**
+     * Handles the impact of the bottle with the ground.
+     * Stops the bottle's vertical movement, sets its Y position to the ground level,
+     * plays a splash animation, and clears an interval if necessary.
+     * 
+     * @param {Bottle} bottle - The bottle object that collided with the ground.
+     * @param {number} bottleInterval - The interval ID that updates the bottle's movement (if applicable).
+     */
+    handleBottleGroundImpact(bottle, bottleInterval) {
+        if (!bottle.isAboveGround()) {
+            bottle.speedY = 0;
+            bottle.acceleration = 0;
+            bottle.y = 370;
+            bottle.playAnimation(bottle.bottleSplashCache);
             clearInterval(bottleInterval);
         }
     }
@@ -465,9 +484,7 @@ class World extends Movable {
     triggerBigChickenDeadAnimation(chicken) {
         chicken.speedX = 0;
         chicken.bigChickenDeadAnimation();
-        backgroundSound.pause();
-        backgroundSound.currentTime = 0;
-        this.sounds.winSound.play();
+        this.sounds.playAudio(this.sounds.winSound);
         showYouWinScreen();
         setTimeout(() => {
             this.clearAllIntervals();

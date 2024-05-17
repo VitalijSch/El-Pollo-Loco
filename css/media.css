@@ -1,4 +1,8 @@
 @media only screen and (max-width: 720px) {
+    body {
+        gap: 0;
+    }
+
     h1 {
         display: none;
     }
@@ -23,6 +27,10 @@
 }
 
 @media only screen and (max-height: 480px) {
+    body {
+        gap: 0;
+    }
+
     .mobile-keyboard-container {
         display: flex;
     }

@@ -63,9 +63,7 @@ class BigChicken extends Movable {
      * @returns {void}
      */
     bigChickenAlertAnimation() {
-        if (!soundMuted) {
-            this.sounds.playAudio(this.sounds.bigChickenSound);
-        }
+        this.sounds.playAudio(this.sounds.bigChickenSound);
         this.playAnimation(this.bigChickenAlertCache);
     }
 

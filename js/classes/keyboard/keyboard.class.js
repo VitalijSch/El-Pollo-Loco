@@ -7,19 +7,22 @@ class Keyboard {
 
     constructor() {
         this.bindKeyPressEvents();
-        this.bindTouchPressEvents();
+        this.bindTouchPressEventsOnDOMReady();
     }
 
 
-    /**
-   * Binds event handlers for keyboard keys.
-   */
+    bindTouchPressEventsOnDOMReady() {
+        if (document.readyState === 'complete' || (document.readyState !== 'loading' && !document.documentElement.doScroll)) {
+            this.bindTouchPressEvents();
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.bindTouchPressEvents();
+            });
+        }
+    }
+
+
     bindKeyPressEvents() {
-        /**
-         * Handles pressing and releasing keys on the keyboard.
-         * @param {number} keyCode - The ASCII code of the pressed key.
-         * @param {boolean} isPressed - Indicates whether the key is pressed or released.
-         */
         window.addEventListener('keydown', (e) => {
             this.handleKeyPress(e.keyCode, true);
         });
@@ -29,9 +32,6 @@ class Keyboard {
     }
 
 
-    /**
-     * Binds event handlers for touch inputs.
-     */
     bindTouchPressEvents() {
         this.addTouchEvent('moveLeft', 'left');
         this.addTouchEvent('moveRight', 'right');
@@ -40,33 +40,20 @@ class Keyboard {
     }
 
 
-    /**
-     * Adds an event handler for touch inputs.
-     * @param {string} buttonId - The ID of the HTML element triggering the touch input.
-     * @param {string} action - The action to be performed upon touch input.
-     */
     addTouchEvent(buttonId, action) {
         const button = document.getElementById(buttonId);
         if (button) {
-            button.addEventListener('touchstart', (e) => {
-                e.preventDefault();
+            button.addEventListener('touchstart', () => {
                 this[action] = true;
-            });
-            button.addEventListener('touchend', (e) => {
-                e.preventDefault();
+            }, { passive: true });
+
+            button.addEventListener('touchend', () => {
                 this[action] = false;
-            });
-        } else {
-            // Error handling in case the element is not found.
+            }, { passive: true });
         }
     }
 
 
-    /**
-     * Handles keyboard inputs.
-     * @param {number} keyCode - The ASCII code of the pressed key.
-     * @param {boolean} isPressed - Indicates whether the key is pressed or released.
-     */
     handleKeyPress(keyCode, isPressed) {
         switch (keyCode) {
             case 37:

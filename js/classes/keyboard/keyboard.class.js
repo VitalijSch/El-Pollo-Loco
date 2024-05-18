@@ -11,6 +11,9 @@ class Keyboard {
     }
 
 
+    /**
+    * Binds touch press events when the DOM is ready.
+    */
     bindTouchPressEventsOnDOMReady() {
         if (document.readyState === 'complete' || (document.readyState !== 'loading' && !document.documentElement.doScroll)) {
             this.bindTouchPressEvents();
@@ -22,6 +25,9 @@ class Keyboard {
     }
 
 
+    /**
+     * Binds key press events to the window object.
+     */
     bindKeyPressEvents() {
         window.addEventListener('keydown', (e) => {
             this.handleKeyPress(e.keyCode, true);
@@ -32,6 +38,9 @@ class Keyboard {
     }
 
 
+    /**
+     * Binds touch press events to specified actions.
+     */
     bindTouchPressEvents() {
         this.addTouchEvent('moveLeft', 'left');
         this.addTouchEvent('moveRight', 'right');
@@ -40,6 +49,12 @@ class Keyboard {
     }
 
 
+    /**
+     * Adds a touch event listener to a button element.
+     * 
+     * @param {string} buttonId - The ID of the button element.
+     * @param {string} action - The action to perform when the button is pressed.
+     */
     addTouchEvent(buttonId, action) {
         const button = document.getElementById(buttonId);
         if (button) {
@@ -54,6 +69,12 @@ class Keyboard {
     }
 
 
+    /**
+     * Handles key press events and updates the corresponding action state.
+     * 
+     * @param {number} keyCode - The key code of the pressed key.
+     * @param {boolean} isPressed - The state of the key press (true for pressed, false for released).
+     */
     handleKeyPress(keyCode, isPressed) {
         switch (keyCode) {
             case 37:

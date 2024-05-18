@@ -60,6 +60,46 @@ function showCanvas() {
 
 
 /**
+ * Handles the transition back to the home screen.
+ * This function hides various game elements and displays the start screen.
+ * It also pauses and resets the background sound if it's currently playing.
+ */
+function backToHome() {
+    let canvas = document.getElementById('canvas');
+    let fullscreen = document.getElementById('fullscreen');
+    document.querySelector('.pause').classList.add('d-none');
+    document.querySelector('.pause-screen-container').classList.add('d-none');
+    document.getElementById('youWin').classList.add('d-none');
+    canvas.classList.add('d-none');
+    fullscreen.style.display = 'none';
+    showStartScreenContainer();
+    if (sounds.playSound) {
+        sounds.backgroundSound.pause();
+        sounds.backgroundSound.currentTime = 0;
+    }
+    resetGame();
+    removeScripts();
+    level1 = levelOne();
+}
+
+
+/**
+ * Displays the start screen container.
+ * This function shows the start screen elements and hides the end screen elements.
+ */
+function showStartScreenContainer() {
+    let content = document.querySelector('.content');
+    let background = document.getElementById('background');
+    let headerContainer = document.querySelector('.header-container');
+    let endScreenContainer = document.querySelector('.end-screen-container');
+    content.classList.remove('d-none');
+    background.src = './assets/images/9_intro_outro_screens/start/startscreen_2.png';
+    headerContainer.classList.remove('d-none');
+    endScreenContainer.classList.add('d-none');
+}
+
+
+/**
  * Displays an information container with the specified ID and hides other elements.
  * @param {string} id - The ID of the container to be displayed.
  * @returns {void}
@@ -97,19 +137,11 @@ function closeInformationContainer() {
 
 
 /**
- * Reloads the window to navigate back to the home page.
- * @returns {void}
- */
-function backToHome() {
-    window.location.reload();
-}
-
-
-/**
  * Starts a new game by resetting the game state, removing any dynamically loaded scripts,
  * initializing the first level, and starting the game.
  */
 function playAgain() {
+    sounds.playAudio(sounds.backgroundSound);
     resetGame();
     removeScripts();
     level1 = levelOne();
@@ -167,7 +199,10 @@ function openEndGameScreen() {
     canvas.classList.add('d-none');
     fullscreen.style.display = 'none';
     showContentContainer();
-    sounds.playAudio(sounds.backgroundSound);
+    if (sounds.playSound) {
+        sounds.backgroundSound.pause();
+        sounds.backgroundSound.currentTime = 0;
+    }
 }
 
 
@@ -224,7 +259,9 @@ function toggleMutedSound() {
     let soundOff = document.getElementById('soundOff');
     soundMuted = !soundMuted;
     if (soundMuted) {
-        sounds.backgroundSound.pause();
+        if (sounds.playSound) {
+            sounds.backgroundSound.pause();
+        }
     } else {
         sounds.playAudio(sounds.backgroundSound);
     }

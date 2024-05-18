@@ -74,6 +74,10 @@ class Character extends Movable {
     }
 
 
+    /**
+    * Loads all character images into the cache.
+    * This includes images for different character states such as walking, jumping, getting hurt, dying, idling, and long idling.
+    */
     loadAllImages() {
         this.loadImage('./assets/images/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.characterWalkCache);
@@ -217,8 +221,8 @@ class Character extends Movable {
     characterIsDead() {
         this.playAnimation(this.characterDeadCache);
         setTimeout(() => {
-            openEndGameScreen();
             this.clearAllIntervals();
+            openEndGameScreen();
         }, 500);
     }
 

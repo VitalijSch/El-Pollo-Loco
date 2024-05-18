@@ -12,6 +12,7 @@ class Sounds {
     chickenSound = new Audio('./assets/audio/chicken.mp3');
     bigChickenSound = new Audio('./assets/audio/big_chicken.mp3');
     winSound = new Audio('./assets/audio/win.mp3');
+    playSound = false;
 
 
     /**
@@ -22,7 +23,7 @@ class Sounds {
     playAudio(audio) {
         if (audio && !soundMuted) {
             audio.volume = 0.5;
-            audio.play().catch(error => console.error('Audio play error:', error));
+            audio.play().then(() => this.playSound = true);
         }
     }
 }

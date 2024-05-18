@@ -4,7 +4,7 @@ let isPausedGame = false;
 let keyboard;
 let canvas;
 let world;
-let sounds = new Sounds();
+let sounds;
 
 
 /**
@@ -55,6 +55,7 @@ function showCanvas() {
     content.classList.add('d-none');
     canvas.classList.remove('d-none');
     fullscreen.style = '';
+    sounds = new Sounds();
     sounds.playAudio(sounds.backgroundSound);
 }
 
@@ -74,8 +75,7 @@ function backToHome() {
     fullscreen.style.display = 'none';
     showStartScreenContainer();
     if (sounds.playSound) {
-        sounds.backgroundSound.pause();
-        sounds.backgroundSound.currentTime = 0;
+        sounds.backgroundSound.src = '';
     }
     resetGame();
     removeScripts();
@@ -141,7 +141,6 @@ function closeInformationContainer() {
  * initializing the first level, and starting the game.
  */
 function playAgain() {
-    sounds.playAudio(sounds.backgroundSound);
     resetGame();
     removeScripts();
     level1 = levelOne();
@@ -155,6 +154,7 @@ function playAgain() {
  */
 function resetGame() {
     keyboard = null;
+    sounds = null;
     canvas = null;
     world.pauseAnimation();
     world.clearAllIntervals();
@@ -200,8 +200,7 @@ function openEndGameScreen() {
     fullscreen.style.display = 'none';
     showContentContainer();
     if (sounds.playSound) {
-        sounds.backgroundSound.pause();
-        sounds.backgroundSound.currentTime = 0;
+        sounds.backgroundSound.src = '';
     }
 }
 
